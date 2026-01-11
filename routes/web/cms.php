@@ -12,6 +12,9 @@ Route::group([
         return inertia('Dashboard');
     })->name('dashboard');
 
+    // Device Routes
+    require 'cms/devices.php';
+
     // Management Routes
     require 'cms/management.php';
 });

@@ -18,8 +18,7 @@ class WuzService
         public ?string $userToken = null,
         public ?string $adminToken = null,
         public ?string $apiUrl = null,
-    )
-    {
+    ) {
         // If no user token is provided, use the default from config
         if (is_null($this->userToken)) {
             $this->userToken = config('wuz.user_token');
@@ -48,11 +47,11 @@ class WuzService
      */
     public function listUsers()
     {
-        $response = $this->httpClient->get($this->apiUrl . '/admin/users');
+        $response = $this->httpClient->get($this->apiUrl.'/admin/users');
 
         if ($response->failed()) {
-            Log::error('Wuz list users error: ' . $response->body());
-            throw new Exception('Failed to fetch users: ' . $response->body());
+            Log::error('Wuz list users error: '.$response->body());
+            throw new Exception('Failed to fetch users: '.$response->body());
         }
 
         return $response->json();
@@ -63,17 +62,17 @@ class WuzService
      */
     public function addUser(string $name, string $token, bool $history = false)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/admin/users', [
+        $response = $this->httpClient->post($this->apiUrl.'/admin/users', [
             'name' => $name,
             'token' => $token,
             'events' => 'All',
-            'webhook' => url('api/v1/webhook/' . $token),
-            'history' => $history,
+            'webhook' => url('api/v1/webhook/'.$token),
+            'history' => $history ? 1 : 0,
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz add user error: ' . $response->body());
-            throw new Exception('Failed to add user: ' . $response->body());
+            Log::error('Wuz add user error: '.$response->body());
+            throw new Exception('Failed to add user: '.$response->body());
         }
 
         return $response->json();
@@ -84,11 +83,11 @@ class WuzService
      */
     public function showUser(string $id)
     {
-        $response = $this->httpClient->get($this->apiUrl . '/admin/users/' . $id);
+        $response = $this->httpClient->get($this->apiUrl.'/admin/users/'.$id);
 
         if ($response->failed()) {
-            Log::error('Wuz show user error: ' . $response->body());
-            throw new Exception('Failed to fetch user: ' . $response->body());
+            Log::error('Wuz show user error: '.$response->body());
+            throw new Exception('Failed to fetch user: '.$response->body());
         }
 
         return $response->json();
@@ -99,11 +98,11 @@ class WuzService
      */
     public function deleteUser(string $id)
     {
-        $response = $this->httpClient->delete($this->apiUrl . '/admin/users/' . $id . '/full');
+        $response = $this->httpClient->delete($this->apiUrl.'/admin/users/'.$id.'/full');
 
         if ($response->failed()) {
-            Log::error('Wuz delete user error: ' . $response->body());
-            throw new Exception('Failed to delete user: ' . $response->body());
+            Log::error('Wuz delete user error: '.$response->body());
+            throw new Exception('Failed to delete user: '.$response->body());
         }
 
         return $response->json();
@@ -114,11 +113,13 @@ class WuzService
      */
     public function sessionConnect()
     {
-        $response = $this->httpClient->post($this->apiUrl . '/session/connect');
+        $response = $this->httpClient->post($this->apiUrl.'/session/connect', [
+            'Immediate' => true,
+        ]);
 
         if ($response->failed()) {
-            Log::error('Wuz session connect error: ' . $response->body());
-            throw new Exception('Failed to connect session: ' . $response->body());
+            Log::error('Wuz session connect error: '.$response->body());
+            throw new Exception('Failed to connect session: '.$response->body());
         }
 
         return $response->json();
@@ -129,11 +130,11 @@ class WuzService
      */
     public function sessionDisconnect()
     {
-        $response = $this->httpClient->post($this->apiUrl . '/session/disconnect');
+        $response = $this->httpClient->post($this->apiUrl.'/session/disconnect');
 
         if ($response->failed()) {
-            Log::error('Wuz session disconnect error: ' . $response->body());
-            throw new Exception('Failed to disconnect session: ' . $response->body());
+            Log::error('Wuz session disconnect error: '.$response->body());
+            throw new Exception('Failed to disconnect session: '.$response->body());
         }
 
         return $response->json();
@@ -144,11 +145,11 @@ class WuzService
      */
     public function sessionLogout()
     {
-        $response = $this->httpClient->post($this->apiUrl . '/session/logout');
+        $response = $this->httpClient->post($this->apiUrl.'/session/logout');
 
         if ($response->failed()) {
-            Log::error('Wuz session logout error: ' . $response->body());
-            throw new Exception('Failed to logout session: ' . $response->body());
+            Log::error('Wuz session logout error: '.$response->body());
+            throw new Exception('Failed to logout session: '.$response->body());
         }
 
         return $response->json();
@@ -159,11 +160,11 @@ class WuzService
      */
     public function sessionStatus()
     {
-        $response = $this->httpClient->get($this->apiUrl . '/session/status');
+        $response = $this->httpClient->get($this->apiUrl.'/session/status');
 
         if ($response->failed()) {
-            Log::error('Wuz session status error: ' . $response->body());
-            throw new Exception('Failed to get session status: ' . $response->body());
+            Log::error('Wuz session status error: '.$response->body());
+            throw new Exception('Failed to get session status: '.$response->body());
         }
 
         return $response->json();
@@ -174,10 +175,10 @@ class WuzService
      */
     public function sessionQr()
     {
-        $response = $this->httpClient->get($this->apiUrl . '/session/qr');
+        $response = $this->httpClient->get($this->apiUrl.'/session/qr');
 
         if ($response->failed()) {
-            throw new Exception('Failed to get session QR: ' . $response->body());
+            throw new Exception('Failed to get session QR: '.$response->body());
         }
 
         return $response->json();
@@ -188,11 +189,11 @@ class WuzService
      */
     public function phoneToJid(string $phone)
     {
-        $response = $this->httpClient->get($this->apiUrl . '/user/lid/' . $phone);
+        $response = $this->httpClient->get($this->apiUrl.'/user/lid/'.$phone);
 
         if ($response->failed()) {
-            Log::error('Wuz phone to jid error: ' . $response->body());
-            throw new Exception('Failed to get JID: ' . $response->body());
+            Log::error('Wuz phone to jid error: '.$response->body());
+            throw new Exception('Failed to get JID: '.$response->body());
         }
 
         return $response->json();
@@ -203,15 +204,15 @@ class WuzService
      */
     public function isPhoneRegistered(string $phone)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/user/check/', [
+        $response = $this->httpClient->post($this->apiUrl.'/user/check/', [
             'Phone' => [
                 $phone,
-            ]
+            ],
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz is phone registered error: ' . $response->body());
-            throw new Exception('Failed to check phone registration: ' . $response->body());
+            Log::error('Wuz is phone registered error: '.$response->body());
+            throw new Exception('Failed to check phone registration: '.$response->body());
         }
 
         return $response->json();
@@ -222,7 +223,7 @@ class WuzService
      */
     public function sendMessageText(string $to, string $message, ?bool $linkPreview = false)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/send/text', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/send/text', [
             'Phone' => $to,
             'Body' => $message,
             'Id' => uniqid().time(),
@@ -230,8 +231,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz send message text error: ' . $response->body());
-            throw new Exception('Failed to send message: ' . $response->body());
+            Log::error('Wuz send message text error: '.$response->body());
+            throw new Exception('Failed to send message: '.$response->body());
         }
 
         return $response->json();
@@ -242,7 +243,7 @@ class WuzService
      */
     public function sendMessageImage(string $to, string $base64Image, ?string $caption = '')
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/send/image', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/send/image', [
             'Phone' => $to,
             'Image' => $base64Image,
             'Caption' => $caption,
@@ -250,8 +251,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz send message image error: ' . $response->body());
-            throw new Exception('Failed to send image message: ' . $response->body());
+            Log::error('Wuz send message image error: '.$response->body());
+            throw new Exception('Failed to send image message: '.$response->body());
         }
 
         return $response->json();
@@ -262,7 +263,7 @@ class WuzService
      */
     public function sendMessageDocument(string $to, string $base64Document, string $filename)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/send/document', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/send/document', [
             'Phone' => $to,
             'Document' => $base64Document,
             'FileName' => $filename,
@@ -270,8 +271,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz send message document error: ' . $response->body());
-            throw new Exception('Failed to send document message: ' . $response->body());
+            Log::error('Wuz send message document error: '.$response->body());
+            throw new Exception('Failed to send document message: '.$response->body());
         }
 
         return $response->json();
@@ -282,7 +283,7 @@ class WuzService
      */
     public function sendMessageVideo(string $to, string $base64Video, ?string $caption = '')
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/send/video', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/send/video', [
             'Phone' => $to,
             'Video' => $base64Video,
             'Caption' => $caption,
@@ -290,8 +291,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz send message video error: ' . $response->body());
-            throw new Exception('Failed to send video message: ' . $response->body());
+            Log::error('Wuz send message video error: '.$response->body());
+            throw new Exception('Failed to send video message: '.$response->body());
         }
 
         return $response->json();
@@ -302,7 +303,7 @@ class WuzService
      */
     public function sendMessageButton(string $to, string $message, array $buttons)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/send/buttons', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/send/buttons', [
             'Phone' => $to,
             'Body' => $message,
             'Footer' => 'Powered by Voda',
@@ -311,8 +312,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz send message button error: ' . $response->body());
-            throw new Exception('Failed to send button message: ' . $response->body());
+            Log::error('Wuz send message button error: '.$response->body());
+            throw new Exception('Failed to send button message: '.$response->body());
         }
 
         return $response->json();
@@ -323,7 +324,7 @@ class WuzService
      */
     public function downloadImage(string $url, string $directPath, string $mediaKey, string $mimetype, string $fileEncSHA256, string $fileSHA256, int $fileLength)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/downloadimage', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/downloadimage', [
             'Url' => $url,
             'DirectPath' => $directPath,
             'MediaKey' => $mediaKey,
@@ -334,8 +335,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz download image error: ' . $response->body());
-            throw new Exception('Failed to download image: ' . $response->body());
+            Log::error('Wuz download image error: '.$response->body());
+            throw new Exception('Failed to download image: '.$response->body());
         }
 
         return $response->json();
@@ -346,7 +347,7 @@ class WuzService
      */
     public function downloadDocument(string $url, string $directPath, string $mediaKey, string $mimetype, string $fileEncSHA256, string $fileSHA256, int $fileLength)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/downloaddocument', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/downloaddocument', [
             'Url' => $url,
             'DirectPath' => $directPath,
             'MediaKey' => $mediaKey,
@@ -357,8 +358,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz download document error: ' . $response->body());
-            throw new Exception('Failed to download document: ' . $response->body());
+            Log::error('Wuz download document error: '.$response->body());
+            throw new Exception('Failed to download document: '.$response->body());
         }
 
         return $response->json();
@@ -369,7 +370,7 @@ class WuzService
      */
     public function downloadVideo(string $url, string $directPath, string $mediaKey, string $mimetype, string $fileEncSHA256, string $fileSHA256, int $fileLength)
     {
-        $response = $this->httpClient->post($this->apiUrl . '/chat/downloadvideo', [
+        $response = $this->httpClient->post($this->apiUrl.'/chat/downloadvideo', [
             'Url' => $url,
             'DirectPath' => $directPath,
             'MediaKey' => $mediaKey,
@@ -380,8 +381,8 @@ class WuzService
         ]);
 
         if ($response->failed()) {
-            Log::error('Wuz download video error: ' . $response->body());
-            throw new Exception('Failed to download video: ' . $response->body());
+            Log::error('Wuz download video error: '.$response->body());
+            throw new Exception('Failed to download video: '.$response->body());
         }
 
         return $response->json();

@@ -24,6 +24,7 @@ class SuperadminMenuSeeder extends Seeder
 
         // Create menu
         $this->dashboardMenu();
+        $this->deviceMenu();
         $this->managementMenu();
     }
 
@@ -36,6 +37,19 @@ class SuperadminMenuSeeder extends Seeder
             'icon' => 'LayoutGrid',
             'order' => 1,
             'active_pattern' => '/cms/dashboard',
+            'status' => 1,
+        ]);
+    }
+
+    public function deviceMenu()
+    {
+        Menu::create([
+            'role_id' => $this->role->id,
+            'name' => 'Devices',
+            'url' => '/cms/device/devices',
+            'icon' => 'TabletSmartphone',
+            'order' => 2,
+            'active_pattern' => '/cms/device/devices',
             'status' => 1,
         ]);
     }
