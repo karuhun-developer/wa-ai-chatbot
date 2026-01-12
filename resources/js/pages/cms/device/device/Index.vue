@@ -2,19 +2,13 @@
 import {
     create,
     destroy,
+    disconnect,
     edit,
     show,
 } from '@/actions/App/Http/Controllers/Cms/Device/DeviceController';
 import Heading from '@/components/Heading.vue';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { usePermission } from '@/composables/usePermission';
 import { useSwal } from '@/composables/useSwal';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -22,7 +16,7 @@ import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { DeviceDataItem } from '@/types/cms/device';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
-import { Pencil, Plus, Settings, Trash2 } from 'lucide-vue-next';
+import { Plus, Settings, Trash2 } from 'lucide-vue-next';
 
 defineProps<{
     data: PaginationItem<DeviceDataItem>;
@@ -78,7 +72,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 >
                     <!-- Status Indicator Bar -->
                     <div
-                        class="absolute bottom-0 left-0 top-0 w-1.5"
+                        class="absolute top-0 bottom-0 left-0 w-1.5"
                         :class="
                             device.connected ? 'bg-emerald-500' : 'bg-red-500'
                         "
@@ -104,7 +98,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                         : 'Disconnected'
                                 }}
                             </span>
-                             <span class="text-xs text-muted-foreground">{{ device.device_id }}</span>
+                            <span class="text-xs text-muted-foreground">{{
+                                device.device_id
+                            }}</span>
                         </div>
 
                         <!-- Actions & Status -->
@@ -117,9 +113,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
                             <!-- Connection Control -->
                             <div v-if="!device.connected">
-                                <Link
-                                    :href="show.url(device.id)"
-                                >
+                                <Link :href="show.url(device.id)">
                                     <Button
                                         size="sm"
                                         variant="outline"
@@ -130,12 +124,41 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                 </Link>
                             </div>
                             <div v-else>
-                                <Badge
+                                <Button
+                                    size="sm"
                                     variant="outline"
-                                    class="border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                                    class="ml-2 border-red-500 text-red-500 hover:bg-red-50"
+                                    @click="
+                                        confirm({
+                                            title: 'Disconnect Device?',
+                                            text: 'This action cannot be undone.',
+                                            icon: 'warning',
+                                            confirmButtonText:
+                                                'Yes, disconnect it!',
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                router.post(
+                                                    disconnect({
+                                                        device: device.id,
+                                                    }).url,
+                                                    {},
+                                                    {
+                                                        preserveScroll: true,
+                                                        preserveState: true,
+                                                        onSuccess: () => {
+                                                            toast.fire({
+                                                                icon: 'success',
+                                                                title: 'Device disconnected successfully.',
+                                                            });
+                                                        },
+                                                    },
+                                                );
+                                            }
+                                        })
+                                    "
                                 >
-                                    Online
-                                </Badge>
+                                    Disconnect
+                                </Button>
                             </div>
 
                             <!-- Bot Toggle Placeholder (Visual only for now if no backend support) -->
@@ -172,12 +195,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                             title: 'Delete Device?',
                                             text: 'This action cannot be undone.',
                                             icon: 'warning',
-                                            confirmButtonText: 'Yes, delete it!',
+                                            confirmButtonText:
+                                                'Yes, delete it!',
                                         }).then((result) => {
                                             if (result.isConfirmed) {
                                                 router.delete(
-                                                    destroy({ device: device.id })
-                                                        .url,
+                                                    destroy({
+                                                        device: device.id,
+                                                    }).url,
                                                     {
                                                         preserveScroll: true,
                                                         preserveState: true,
@@ -199,7 +224,10 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         </div>
                     </div>
                 </Card>
-                 <div v-if="data.data.length === 0" class="text-center p-8 text-gray-500">
+                <div
+                    v-if="data.data.length === 0"
+                    class="p-8 text-center text-gray-500"
+                >
                     No devices found.
                 </div>
             </div>

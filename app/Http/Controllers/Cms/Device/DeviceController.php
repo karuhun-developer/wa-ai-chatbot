@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Cms\Device;
 
 use App\Actions\Cms\Device\Device\ConnectDeviceAction;
 use App\Actions\Cms\Device\Device\DeleteDeviceAction;
+use App\Actions\Cms\Device\Device\DisconnectDeviceAction;
+use App\Actions\Cms\Device\Device\StatusDeviceAction;
 use App\Actions\Cms\Device\Device\StoreDeviceAction;
 use App\Actions\Cms\Device\Device\UpdateDeviceAction;
 use App\Http\Controllers\Controller;
@@ -82,7 +84,7 @@ class DeviceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(\Illuminate\Http\Request $request, Device $device, ConnectDeviceAction $connectAction, \App\Actions\Cms\Device\Device\StatusDeviceAction $statusAction)
+    public function show(\Illuminate\Http\Request $request, Device $device, ConnectDeviceAction $connectAction, StatusDeviceAction $statusAction)
     {
         Gate::authorize('update'.$this->resource);
 
@@ -133,6 +135,19 @@ class DeviceController extends Controller
         Gate::authorize('update'.$this->resource);
 
         $action->handle($device, $request->validated());
+
+        return back();
+    }
+
+    /**
+     * Disconnect the specified resource.
+     */
+    public function disconnect(Device $device, DisconnectDeviceAction $disconnectAction, StatusDeviceAction $statusAction)
+    {
+        Gate::authorize('update'.$this->resource);
+
+        $disconnectAction->handle($device);
+        $statusAction->handle($device);
 
         return back();
     }

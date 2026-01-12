@@ -9,4 +9,5 @@ Route::group([
     Route::resources([
         'devices' => \App\Http\Controllers\Cms\Device\DeviceController::class,
     ]);
+    Route::post('devices/{device}/disconnect', [\App\Http\Controllers\Cms\Device\DeviceController::class, 'disconnect'])->name('devices.disconnect');
 });
