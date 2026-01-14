@@ -8,6 +8,7 @@ use App\Models\Wuz\Device;
 use App\Models\Wuz\DeviceMessage;
 use App\Services\WuzService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class StoreCallbackAction
 {
@@ -154,7 +155,7 @@ class StoreCallbackAction
 
                 $fileName = 'media/'.$device->id.'/'.uniqid().'.'.$extension;
 
-                \Illuminate\Support\Facades\Storage::disk('public')->put($fileName, $fileData);
+                Storage::disk('public')->put($fileName, $fileData);
 
                 return [
                     'downloaded' => true,
@@ -162,7 +163,7 @@ class StoreCallbackAction
                     'mimetype' => $mimetype,
                     'file_length' => $fileLength,
                     'path' => $fileName,
-                    'url' => \Illuminate\Support\Facades\Storage::url($fileName),
+                    'url' => Storage::url($fileName),
                 ];
             }
 

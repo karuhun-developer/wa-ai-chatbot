@@ -25,6 +25,7 @@ class SuperadminMenuSeeder extends Seeder
         // Create menu
         $this->dashboardMenu();
         $this->deviceMenu();
+        $this->callbackLogMenu();
         $this->managementMenu();
     }
 
@@ -50,6 +51,19 @@ class SuperadminMenuSeeder extends Seeder
             'icon' => 'TabletSmartphone',
             'order' => 2,
             'active_pattern' => '/cms/device/devices',
+            'status' => 1,
+        ]);
+    }
+
+    public function callbackLogMenu()
+    {
+        Menu::create([
+            'role_id' => $this->role->id,
+            'name' => 'Callback Logs',
+            'url' => '/cms/device/callback-logs',
+            'icon' => 'History',
+            'order' => 3,
+            'active_pattern' => '/cms/device/callback-logs',
             'status' => 1,
         ]);
     }

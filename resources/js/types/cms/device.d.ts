@@ -11,6 +11,7 @@ export interface DeviceDataItem {
     created_at: string;
     updated_at: string;
     user?: UserDataItem;
+    callbackLogs: CallbackLogDataItem[];
 }
 
 export interface DeviceWebhookDataItem {
@@ -23,3 +24,15 @@ export interface DeviceWebhookDataItem {
     updated_at: string;
 }
 
+export interface CallbackLogDataItem {
+    id: number;
+    device_id: number;
+    device_name?: string;
+    event_type: string;
+    payload: any;
+    ip_address: string;
+    user_agent: string;
+    created_at: string;
+    updated_at: string;
+    device?: DeviceDataItem;
+}

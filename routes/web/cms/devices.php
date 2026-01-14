@@ -14,4 +14,6 @@ Route::group([
     Route::post('devices/{device}/webhooks/sync', [\App\Http\Controllers\Cms\Device\DeviceWebhookController::class, 'sync'])->name('devices.webhooks.sync');
     Route::get('devices/{device}/messages/test', [\App\Http\Controllers\Cms\Device\DeviceMessageController::class, 'test'])->name('devices.messages.test');
     Route::post('devices/{device}/messages/send', [\App\Http\Controllers\Cms\Device\DeviceMessageController::class, 'send'])->name('devices.messages.send');
+
+    Route::resource('callback-logs', \App\Http\Controllers\Cms\Device\CallbackLogController::class)->only(['index', 'show']);
 });
