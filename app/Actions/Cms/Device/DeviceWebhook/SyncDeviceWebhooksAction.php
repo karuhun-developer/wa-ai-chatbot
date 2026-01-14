@@ -3,7 +3,6 @@
 namespace App\Actions\Cms\Device\DeviceWebhook;
 
 use App\Models\Wuz\Device;
-use App\Models\Wuz\DeviceWebhook;
 use Illuminate\Support\Facades\DB;
 
 class SyncDeviceWebhooksAction

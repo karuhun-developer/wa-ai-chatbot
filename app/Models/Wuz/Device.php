@@ -28,5 +28,9 @@ class Device extends Model
     {
         return $this->hasMany(DeviceWebhook::class);
     }
-}
 
+    public function callbackLogs()
+    {
+        return $this->hasMany(CallbackLog::class);
+    }
+}

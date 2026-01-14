@@ -4,19 +4,20 @@ namespace App\Models\Wuz;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeviceWebhook extends Model
+class CallbackLog extends Model
 {
     protected $fillable = [
         'device_id',
-        'event',
-        'url',
-        'status',
+        'event_type',
+        'payload',
+        'ip_address',
+        'user_agent',
     ];
 
     protected function casts(): array
     {
         return [
-            'status' => 'boolean',
+            'payload' => 'array',
         ];
     }
 
