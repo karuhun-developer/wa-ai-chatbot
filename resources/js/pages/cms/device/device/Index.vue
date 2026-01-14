@@ -6,6 +6,7 @@ import {
     edit,
     show,
 } from '@/actions/App/Http/Controllers/Cms/Device/DeviceController';
+import { manage } from '@/actions/App/Http/Controllers/Cms/Device/DeviceWebhookController';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -16,7 +17,7 @@ import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { DeviceDataItem } from '@/types/cms/device';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
-import { Plus, Settings, Trash2 } from 'lucide-vue-next';
+import { Plus, Settings, Trash2, Webhook } from 'lucide-vue-next';
 
 defineProps<{
     data: PaginationItem<DeviceDataItem>;
@@ -172,6 +173,21 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             <!-- Action Buttons -->
                             <div class="flex items-center gap-2">
                                 <ModalLink
+                                    :href="manage({ device: device.id }).url"
+                                    slideover
+                                    v-if="hasPermission('update' + resource)"
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        class="h-9 w-9 bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                        title="Manage Webhooks"
+                                    >
+                                        <Webhook class="h-4 w-4" />
+                                    </Button>
+                                </ModalLink>
+
+                                <ModalLink
                                     :href="edit({ device: device.id }).url"
                                     slideover
                                     v-if="hasPermission('update' + resource)"
@@ -180,6 +196,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                         variant="ghost"
                                         size="icon"
                                         class="h-9 w-9 bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                        title="Edit Device"
                                     >
                                         <Settings class="h-4 w-4" />
                                     </Button>

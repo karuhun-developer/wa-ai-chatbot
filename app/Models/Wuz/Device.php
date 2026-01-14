@@ -23,4 +23,10 @@ class Device extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    public function webhooks()
+    {
+        return $this->hasMany(DeviceWebhook::class);
+    }
 }
+

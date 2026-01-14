@@ -12,3 +12,14 @@ export interface DeviceDataItem {
     updated_at: string;
     user?: UserDataItem;
 }
+
+export interface DeviceWebhookDataItem {
+    id: number;
+    device_id: number;
+    event: string;
+    url: string | null;
+    status: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
