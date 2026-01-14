@@ -7,6 +7,7 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/Cms/Device/DeviceController';
 import { manage } from '@/actions/App/Http/Controllers/Cms/Device/DeviceWebhookController';
+import { test } from '@/actions/App/Http/Controllers/Cms/Device/DeviceMessageController';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -17,7 +18,7 @@ import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { DeviceDataItem } from '@/types/cms/device';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
-import { Plus, Settings, Trash2, Webhook } from 'lucide-vue-next';
+import { Plus, Settings, Trash2, Webhook, MessageSquare } from 'lucide-vue-next';
 
 defineProps<{
     data: PaginationItem<DeviceDataItem>;
@@ -172,6 +173,20 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
                             <!-- Action Buttons -->
                             <div class="flex items-center gap-2">
+                                <Link
+                                    :href="test({ device: device.id }).url"
+                                    v-if="hasPermission('update' + resource)"
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        class="h-9 w-9 bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                        title="Test Message"
+                                    >
+                                        <MessageSquare class="h-4 w-4" />
+                                    </Button>
+                                </Link>
+
                                 <ModalLink
                                     :href="manage({ device: device.id }).url"
                                     slideover
