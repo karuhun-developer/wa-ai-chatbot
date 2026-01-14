@@ -12,4 +12,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
 
     // Callback Route
     require 'v1/callback.php';
+
+    // Wuz Route
+    require 'v1/wuz.php';
 });

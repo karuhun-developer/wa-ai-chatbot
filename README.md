@@ -4,6 +4,10 @@ A powerful WhatsApp management application built with **Laravel 12**, **Inertia.
 
 ![alt text](image.png)
 
+## Postman
+
+https://www.postman.com/restless-comet-598061/workspace/hotel/collection/8500651-b823b84b-0213-4825-aa80-36385eeb5c7e?action=share&creator=8500651
+
 ## ✨ Features
 
 ### ✅ Completed
