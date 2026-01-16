@@ -20,7 +20,6 @@ https://www.postman.com/restless-comet-598061/workspace/hotel/collection/8500651
 ### 🚧 Coming Soon
 
 - **Webhook API**: API endpoints for managing webhooks programmatically.
-- **Send Text, Image, Video API**: Public API for sending messages.
 - **AI Integration**: AI-powered response and interaction auditing.
 
 ## 📦 Tech Stack
