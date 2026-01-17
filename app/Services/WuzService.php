@@ -387,4 +387,25 @@ class WuzService
 
         return $response->json();
     }
+
+    /**
+     * Set webhook events, sometimes needed to update events
+     */
+    public function setWebhookEvents(string $token)
+    {
+        $response = $this->httpClient->put($this->apiUrl.'/webhook', [
+            'webhook' => url('api/v1/webhook/'.$token),
+            'events' => [
+                'All',
+            ],
+            'Active' => true,
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Wuz set webhook events error: '.$response->body());
+            throw new Exception('Failed to set webhook events: '.$response->body());
+        }
+
+        return $response->json();
+    }
 }

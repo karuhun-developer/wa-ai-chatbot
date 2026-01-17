@@ -84,7 +84,7 @@ class DeviceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(\Illuminate\Http\Request $request, Device $device, ConnectDeviceAction $connectAction, StatusDeviceAction $statusAction)
+    public function show(Request $request, Device $device, ConnectDeviceAction $connectAction, StatusDeviceAction $statusAction)
     {
         Gate::authorize('update'.$this->resource);
 

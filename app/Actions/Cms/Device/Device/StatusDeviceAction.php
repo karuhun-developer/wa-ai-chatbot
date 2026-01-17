@@ -25,6 +25,7 @@ class StatusDeviceAction
         $data = [];
         try {
             $data = $this->wuzService->sessionStatus();
+            $this->wuzService->setWebhookEvents($device->token);
         } catch (\Exception $e) {
             // Do nothing
         }
