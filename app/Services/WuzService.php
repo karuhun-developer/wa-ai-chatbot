@@ -239,6 +239,27 @@ class WuzService
     }
 
     /**
+     * Send chat presence
+     * type = 'composing' | 'paused'
+     * media = '' | 'audio'
+     */
+    public function sendChatPresence(string $to, string $type = 'composing', string $media = '')
+    {
+        $response = $this->httpClient->post($this->apiUrl.'/chat/presence', [
+            'Phone' => $to,
+            'State' => $type,
+            'Media' => $media,
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Wuz send chat presence error: '.$response->body());
+            throw new Exception('Failed to send chat presence: '.$response->body());
+        }
+
+        return $response->json();
+    }
+
+    /**
      * Send message image
      */
     public function sendMessageImage(string $to, string $base64Image, ?string $caption = '')
