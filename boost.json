@@ -4,12 +4,19 @@
         "cursor",
         "gemini"
     ],
-    "editors": [
-        "cursor",
-        "gemini",
-        "vscode"
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "packages": [
+        "laravel/fortify",
+        "neuron-core/neuron-laravel"
     ],
-    "guidelines": [
-        "laravel/fortify"
+    "sail": false,
+    "skills": [
+        "wayfinder-development",
+        "pest-testing",
+        "inertia-vue-development",
+        "tailwindcss-development",
+        "developing-with-fortify"
     ]
 }
