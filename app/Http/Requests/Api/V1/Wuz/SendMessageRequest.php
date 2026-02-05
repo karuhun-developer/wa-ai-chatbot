@@ -18,6 +18,7 @@ class SendMessageRequest extends FormRequest
             'phone' => 'required|numeric',
             'type' => 'required|in:text,image,video,button',
             'message' => 'required_if:type,text,button|string',
+            'link_preview' => 'required_if:type,text|boolean',
             'image' => 'required_if:type,image|file|image|max:2048', // 2MB max
             'video' => 'required_if:type,video|file|mimes:mp4,avi,mov,wmv|max:5120', // 5MB max
             'caption' => 'nullable|string',

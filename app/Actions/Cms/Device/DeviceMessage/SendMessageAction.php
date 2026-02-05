@@ -61,7 +61,8 @@ class SendMessageAction
                         // $wuzService->sendChatPresence($phone, 'paused');
                         $response = $wuzService->sendMessageText(
                             $phone,
-                            $data['message']
+                            $data['message'],
+                            isset($data['link_preview']) ? (bool)$data['link_preview'] : false,
                         );
                         $messageContent = $data['message'];
                         break;
