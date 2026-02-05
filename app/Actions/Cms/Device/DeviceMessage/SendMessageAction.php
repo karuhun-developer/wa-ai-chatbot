@@ -57,7 +57,8 @@ class SendMessageAction
             try {
                 switch ($messageType) {
                     case 'text':
-                        $wuzService->sendChatPresence($phone);
+                        // $wuzService->sendChatPresence($phone);
+                        // $wuzService->sendChatPresence($phone, 'paused');
                         $response = $wuzService->sendMessageText(
                             $phone,
                             $data['message']
@@ -72,7 +73,8 @@ class SendMessageAction
                         $mimeType = $imageFile->getMimeType();
                         $base64Image = "data:{$mimeType};base64,{$imageData}";
 
-                        $wuzService->sendChatPresence($phone);
+                        // $wuzService->sendChatPresence($phone);
+                        // $wuzService->sendChatPresence($phone, 'paused');
                         $response = $wuzService->sendMessageImage(
                             $phone,
                             $base64Image,
@@ -88,7 +90,8 @@ class SendMessageAction
                         $mimeType = $videoFile->getMimeType();
                         $base64Video = "data:{$mimeType};base64,{$videoData}";
 
-                        $wuzService->sendChatPresence($phone);
+                        // $wuzService->sendChatPresence($phone);
+                        // $wuzService->sendChatPresence($phone, 'paused');
                         $response = $wuzService->sendMessageVideo(
                             $phone,
                             $base64Video,
