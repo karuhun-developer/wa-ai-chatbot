@@ -33,3 +33,13 @@ function normalizePhoneNumber(string $phoneNumber, string $prefix = '62'): strin
     // For any other case, add prefix
     return $prefix.$phoneNumber;
 }
+
+function jidToPhone(string $jid): string
+{
+    // Remove domain part if present
+    if (str_contains($jid, '@')) {
+        $jid = explode('@', $jid)[0];
+    }
+
+    return normalizePhoneNumber($jid);
+}

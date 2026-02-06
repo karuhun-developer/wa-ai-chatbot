@@ -7,6 +7,7 @@ use App\Models\Wuz\CallbackLog;
 use App\Models\Wuz\Device;
 use App\Models\Wuz\DeviceMessage;
 use App\Services\WuzService;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,8 +44,8 @@ class StoreCallbackAction
         // Handle different event types
         match ($eventType) {
             EventType::MESSAGE => $this->handleMessage($device, $data),
-            EventType::DISCONNECTED => $this->handleDisconnected($device),
-            EventType::LOGGED_OUT => $this->handleLoggedOut($device),
+            // EventType::DISCONNECTED => $this->handleDisconnected($device),
+            // EventType::LOGGED_OUT => $this->handleLoggedOut($device),
             default => null,
         };
 
@@ -56,46 +57,76 @@ class StoreCallbackAction
      */
     private function handleMessage(Device $device, array $data): void
     {
-        $info = $data['Info'] ?? [];
-        $message = $data['Message'] ?? [];
+        $info = $data['event']['Info'] ?? [];
+        $message = $data['event']['Message'] ?? [];
 
         // Extract message details
-        $chatJid = $info['RemoteJid'] ?? null;
-        $senderJid = $info['Sender']['User'] ?? null;
+        $chatLid = $info['Chat'] ?? null;
+        $senderJid = $info['SenderAlt'] ?? null;
+
+        // Check if sender jid contains @lid replace with Sender
+        if ($senderJid && str_contains($senderJid, '@lid')) {
+            $senderJid = $info['Sender'] ?? $senderJid;
+        }
+
         $messageType = 'text';
         $messageContent = null;
         $metadata = [];
+
+        // Webhook
+        $webhook = $device->webhooks()->where('event', 'All')->first();
 
         // Detect message type and extract content
         if (isset($message['conversation'])) {
             $messageType = 'text';
             $messageContent = $message['conversation'];
+            $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         } elseif (isset($message['extendedTextMessage'])) {
-            $messageType = 'text';
-            $messageContent = $message['extendedTextMessage']['text'] ?? null;
+            // Skip
+            // $messageType = 'text';
+            // $messageContent = $message['extendedTextMessage']['text'] ?? null;
+            return;
         } elseif (isset($message['imageMessage'])) {
             $messageType = 'image';
             $messageContent = $message['imageMessage']['caption'] ?? null;
             $metadata = $this->downloadMedia($device, $message['imageMessage'], 'image');
+            $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         } elseif (isset($message['videoMessage'])) {
             $messageType = 'video';
             $messageContent = $message['videoMessage']['caption'] ?? null;
             $metadata = $this->downloadMedia($device, $message['videoMessage'], 'video');
+            $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         } elseif (isset($message['documentMessage'])) {
             $messageType = 'document';
             $messageContent = $message['documentMessage']['fileName'] ?? $message['documentMessage']['title'] ?? null;
             $metadata = $this->downloadMedia($device, $message['documentMessage'], 'document');
+            $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         }
 
         // Store message in database
-        DeviceMessage::create([
-            'device_id' => $device->id,
-            'chat_jid' => $chatJid,
-            'sender_jid' => $senderJid,
-            'message' => $messageContent,
-            'metadata' => $metadata,
-            'type' => $messageType,
-        ]);
+        // DeviceMessage::create([
+        //     'device_id' => $device->id,
+        //     'chat_jid' => $chatLid,
+        //     'sender_jid' => $senderJid,
+        //     'message' => $messageContent,
+        //     'metadata' => $metadata,
+        //     'type' => $messageType,
+        // ]);
+
+        // Send webhook if configured
+        if ($webhook && $messageContent) {
+            $phone = jidToPhone($senderJid);
+            try {
+                Http::post($webhook->url, [
+                    'event' => 'MessageReceived',
+                    'key' => $device->token,
+                    'message' => $message,
+                    'sender' => $phone,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send webhook: '.$e->getMessage());
+            }
+        }
     }
 
     /**
