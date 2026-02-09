@@ -34,7 +34,7 @@ class SendMessageAction
             if (empty($phoneJid->jid)) {
                 try {
                     $wuzService = new WuzService(userToken: $device->token);
-                    $jidData = $wuzService->phoneToJid($phone);
+                    // $jidData = $wuzService->phoneToJid($phone);
 
                     if (isset($jidData['data'])) {
                         $phoneJid->update([
