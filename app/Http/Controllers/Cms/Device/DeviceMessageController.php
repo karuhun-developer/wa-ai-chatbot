@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cms\Device;
 
+use App\Actions\Cms\Device\Device\StatusDeviceAction;
 use App\Actions\Cms\Device\DeviceMessage\SendMessageAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cms\Device\DeviceMessage\SendMessageRequest;
@@ -27,10 +28,11 @@ class DeviceMessageController extends Controller
     /**
      * Send a message.
      */
-    public function send(SendMessageRequest $request, Device $device, SendMessageAction $action)
+    public function send(SendMessageRequest $request, Device $device, SendMessageAction $action, StatusDeviceAction $statusAction)
     {
         Gate::authorize('update'.$this->resource);
 
+        $statusAction->handle($device);
         $action->handle($device, $request->validated());
 
         return back();
