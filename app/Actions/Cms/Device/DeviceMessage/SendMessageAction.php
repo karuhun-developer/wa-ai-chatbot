@@ -57,8 +57,14 @@ class SendMessageAction
             try {
                 switch ($messageType) {
                     case 'text':
-                        // $wuzService->sendChatPresence($phone);
-                        // $wuzService->sendChatPresence($phone, 'paused');
+                        $wuzService->sendChatPresence($phone, 'composing');
+
+                        // Simulate typing delay based on message content
+                        sleep($this->getTypingSeconds($messageContent));
+
+                        $wuzService->sendChatPresence($phone, 'paused');
+
+                        // Send text message
                         $response = $wuzService->sendMessageText(
                             $phone,
                             $data['message'],
@@ -74,8 +80,15 @@ class SendMessageAction
                         $mimeType = $imageFile->getMimeType();
                         $base64Image = "data:{$mimeType};base64,{$imageData}";
 
-                        // $wuzService->sendChatPresence($phone);
-                        // $wuzService->sendChatPresence($phone, 'paused');
+                        if (!empty($data['caption'] ?? null)) {
+                            $wuzService->sendChatPresence($phone);
+
+                            // Simulate typing delay based on caption content
+                            sleep($this->getTypingSeconds($data['caption'] ?? 'Image'));
+
+                            $wuzService->sendChatPresence($phone, 'paused');
+                        }
+
                         $response = $wuzService->sendMessageImage(
                             $phone,
                             $base64Image,
@@ -91,8 +104,15 @@ class SendMessageAction
                         $mimeType = $videoFile->getMimeType();
                         $base64Video = "data:{$mimeType};base64,{$videoData}";
 
-                        // $wuzService->sendChatPresence($phone);
-                        // $wuzService->sendChatPresence($phone, 'paused');
+                        if (!empty($data['caption'] ?? null)) {
+                            $wuzService->sendChatPresence($phone);
+
+                            // Simulate typing delay based on caption content
+                            sleep($this->getTypingSeconds($data['caption'] ?? 'Video'));
+
+                            $wuzService->sendChatPresence($phone, 'paused');
+                        }
+
                         $response = $wuzService->sendMessageVideo(
                             $phone,
                             $base64Video,
@@ -125,5 +145,19 @@ class SendMessageAction
                 'type' => $messageType,
             ]);
         });
+    }
+
+    /**
+     * Estimate typing duration based on message content.
+     */
+    private function getTypingSeconds(string $text): int
+    {
+        $words = str_word_count($text);
+        $symbols = preg_match_all('/[^\w\s]/', $text);
+        $breaks = substr_count($text, "\n");
+
+        $duration = ($words * 1.2) + ($symbols * 0.8) + ($breaks * 1.5);
+
+        return (int) clamp($duration, 2, 25);
     }
 }
