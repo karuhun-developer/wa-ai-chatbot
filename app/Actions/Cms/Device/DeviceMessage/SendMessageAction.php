@@ -156,8 +156,13 @@ class SendMessageAction
         $symbols = preg_match_all('/[^\w\s]/', $text);
         $breaks = substr_count($text, "\n");
 
-        $duration = ($words * 1.2) + ($symbols * 0.8) + ($breaks * 1.5);
+        // If message is very short, set minimum typing time
+        if (strlen($text) <= 3) {
+            return 0.5;
+        }
 
-        return (int) clamp($duration, 2, 25);
+        $duration = ($words * 0.8) + ($symbols * 0.5) + ($breaks * 1.0);
+
+        return (float) clamp($duration, 0.5, 25);
     }
 }
