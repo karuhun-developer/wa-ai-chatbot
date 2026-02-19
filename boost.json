@@ -2,14 +2,17 @@
     "agents": [
         "copilot",
         "cursor",
-        "gemini"
+        "gemini",
+        "claude_code"
     ],
     "guidelines": true,
     "herd_mcp": false,
     "mcp": true,
+    "nightwatch_mcp": false,
     "packages": [
         "laravel/fortify",
-        "neuron-core/neuron-laravel"
+        "neuron-core/neuron-laravel",
+        "spatie/laravel-medialibrary"
     ],
     "sail": false,
     "skills": [
@@ -17,6 +20,7 @@
         "pest-testing",
         "inertia-vue-development",
         "tailwindcss-development",
-        "developing-with-fortify"
+        "developing-with-fortify",
+        "medialibrary-development"
     ]
 }
