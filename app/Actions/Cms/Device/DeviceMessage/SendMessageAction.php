@@ -2,6 +2,7 @@
 
 namespace App\Actions\Cms\Device\DeviceMessage;
 
+use App\Jobs\Wuz\SendWuzMessageJob;
 use App\Models\Wuz\Device;
 use App\Models\Wuz\DeviceMessage;
 use App\Models\Wuz\PhoneJid;
@@ -49,8 +50,7 @@ class SendMessageAction
             }
 
             // Send message based on type
-            $wuzService = new WuzService(userToken: $device->token);
-            $response = null;
+            $response = [];
             $messageType = $data['type'] ?? 'text';
             $messageContent = '';
 
@@ -61,21 +61,16 @@ class SendMessageAction
                         $linkPreview = isset($data['link_preview']) ? (bool) $data['link_preview'] : false;
 
                         // Dispatch to a queue to avoid blocking the request and to simulate typing presence
-                        dispatch(function () use ($wuzService, $phone, $messageContent, $linkPreview) {
-                            $wuzService->sendChatPresence($phone, 'composing');
-
-                            // Simulate typing delay based on message content
-                            sleep($this->getTypingSeconds($messageContent));
-
-                            $wuzService->sendChatPresence($phone, 'paused');
-
-                            // Send text message
-                            $wuzService->sendMessageText(
-                                $phone,
-                                $messageContent,
-                                $linkPreview,
-                            );
-                        });
+                        dispatch(
+                            new SendWuzMessageJob(
+                                deviceToken: $device->token,
+                                phone: $phone,
+                                type: 'text',
+                                messageContent: $messageContent,
+                                mediaData: null,
+                                linkPreview: $linkPreview,
+                            )
+                        );
 
                         break;
 
@@ -88,23 +83,15 @@ class SendMessageAction
                         $messageContent = $data['caption'] ?? '';
 
                         // Dispatch to a queue to avoid blocking the request and to simulate typing presence if caption exists
-                        dispatch(function () use ($wuzService, $phone, $base64Image, $messageContent) {
-                            if (! empty($messageContent)) {
-                                $wuzService->sendChatPresence($phone);
-
-                                // Simulate typing delay based on caption content
-                                sleep($this->getTypingSeconds($messageContent));
-
-                                $wuzService->sendChatPresence($phone, 'paused');
-                            }
-
-                            // Send image message
-                            $wuzService->sendMessageImage(
-                                $phone,
-                                $base64Image,
-                                $messageContent,
-                            );
-                        });
+                        dispatch(
+                            new SendWuzMessageJob(
+                                deviceToken: $device->token,
+                                phone: $phone,
+                                type: 'image',
+                                messageContent: $messageContent,
+                                mediaData: $base64Image,
+                            )
+                        );
 
                         break;
 
@@ -117,22 +104,16 @@ class SendMessageAction
                         $messageContent = $data['caption'] ?? '';
 
                         // Dispatch to a queue to avoid blocking the request and to simulate typing presence if caption exists
-                        dispatch(function () use ($wuzService, $phone, $base64Video, $messageContent) {
-                            if (! empty($messageContent)) {
-                                $wuzService->sendChatPresence($phone);
+                        dispatch(
+                            new SendWuzMessageJob(
+                                deviceToken: $device->token,
+                                phone: $phone,
+                                type: 'video',
+                                messageContent: $messageContent,
+                                mediaData: $base64Video,
+                            )
+                        );
 
-                                // Simulate typing delay based on caption content
-                                sleep($this->getTypingSeconds($messageContent));
-
-                                $wuzService->sendChatPresence($phone, 'paused');
-                            }
-
-                            $wuzService->sendMessageVideo(
-                                $phone,
-                                $base64Video,
-                                $messageContent,
-                            );
-                        });
                         break;
 
                         // case 'button':
@@ -161,19 +142,5 @@ class SendMessageAction
                 'type' => $messageType,
             ]);
         });
-    }
-
-    /**
-     * Estimate typing duration based on message content.
-     */
-    private function getTypingSeconds(string $text): int
-    {
-        $words = str_word_count($text);
-        $symbols = preg_match_all('/[^\w\s]/', $text);
-        $breaks = substr_count($text, "\n");
-
-        $duration = ($words * 0.3) + ($symbols * 0.2) + ($breaks * 0.5);
-
-        return (float) clamp($duration, 0.5, 25);
     }
 }
