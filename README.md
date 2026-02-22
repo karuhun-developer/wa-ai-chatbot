@@ -16,11 +16,7 @@ https://www.postman.com/restless-comet-598061/workspace/hotel/collection/8500651
 - **Send Message (Image & Video)**: Send multimedia messages directly.
 - **Callback Log**: Monitor and view detailed logs of incoming callbacks (messages, status updates).
 - **Webhook Management**: Configure and manage webhooks for device events.
-
-### 🚧 Coming Soon
-
 - **Webhook API**: API endpoints for managing webhooks programmatically.
-- **AI Integration**: AI-powered response and interaction auditing.
 
 ## 📦 Tech Stack
 
