@@ -57,20 +57,26 @@ class SendMessageAction
             try {
                 switch ($messageType) {
                     case 'text':
-                        $wuzService->sendChatPresence($phone, 'composing');
-
-                        // Simulate typing delay based on message content
-                        sleep($this->getTypingSeconds($messageContent));
-
-                        $wuzService->sendChatPresence($phone, 'paused');
-
-                        // Send text message
-                        $response = $wuzService->sendMessageText(
-                            $phone,
-                            $data['message'],
-                            isset($data['link_preview']) ? (bool)$data['link_preview'] : false,
-                        );
                         $messageContent = $data['message'];
+                        $linkPreview = isset($data['link_preview']) ? (bool) $data['link_preview'] : false;
+
+                        // Dispatch to a queue to avoid blocking the request and to simulate typing presence
+                        dispatch(function () use ($wuzService, $phone, $messageContent, $linkPreview) {
+                            $wuzService->sendChatPresence($phone, 'composing');
+
+                            // Simulate typing delay based on message content
+                            sleep($this->getTypingSeconds($messageContent));
+
+                            $wuzService->sendChatPresence($phone, 'paused');
+
+                            // Send text message
+                            $wuzService->sendMessageText(
+                                $phone,
+                                $messageContent,
+                                $linkPreview,
+                            );
+                        });
+
                         break;
 
                     case 'image':
@@ -79,22 +85,27 @@ class SendMessageAction
                         $imageData = base64_encode(file_get_contents($imageFile->getRealPath()));
                         $mimeType = $imageFile->getMimeType();
                         $base64Image = "data:{$mimeType};base64,{$imageData}";
+                        $messageContent = $data['caption'] ?? '';
 
-                        if (!empty($data['caption'] ?? null)) {
-                            $wuzService->sendChatPresence($phone);
+                        // Dispatch to a queue to avoid blocking the request and to simulate typing presence if caption exists
+                        dispatch(function () use ($wuzService, $phone, $base64Image, $messageContent) {
+                            if (! empty($messageContent)) {
+                                $wuzService->sendChatPresence($phone);
 
-                            // Simulate typing delay based on caption content
-                            sleep($this->getTypingSeconds($data['caption'] ?? 'Image'));
+                                // Simulate typing delay based on caption content
+                                sleep($this->getTypingSeconds($messageContent));
 
-                            $wuzService->sendChatPresence($phone, 'paused');
-                        }
+                                $wuzService->sendChatPresence($phone, 'paused');
+                            }
 
-                        $response = $wuzService->sendMessageImage(
-                            $phone,
-                            $base64Image,
-                            $data['caption'] ?? ''
-                        );
-                        $messageContent = $data['caption'] ?? 'Image';
+                            // Send image message
+                            $wuzService->sendMessageImage(
+                                $phone,
+                                $base64Image,
+                                $messageContent,
+                            );
+                        });
+
                         break;
 
                     case 'video':
@@ -103,32 +114,37 @@ class SendMessageAction
                         $videoData = base64_encode(file_get_contents($videoFile->getRealPath()));
                         $mimeType = $videoFile->getMimeType();
                         $base64Video = "data:{$mimeType};base64,{$videoData}";
+                        $messageContent = $data['caption'] ?? '';
 
-                        if (!empty($data['caption'] ?? null)) {
-                            $wuzService->sendChatPresence($phone);
+                        // Dispatch to a queue to avoid blocking the request and to simulate typing presence if caption exists
+                        dispatch(function () use ($wuzService, $phone, $base64Video, $messageContent) {
+                            if (! empty($messageContent)) {
+                                $wuzService->sendChatPresence($phone);
 
-                            // Simulate typing delay based on caption content
-                            sleep($this->getTypingSeconds($data['caption'] ?? 'Video'));
+                                // Simulate typing delay based on caption content
+                                sleep($this->getTypingSeconds($messageContent));
 
-                            $wuzService->sendChatPresence($phone, 'paused');
-                        }
+                                $wuzService->sendChatPresence($phone, 'paused');
+                            }
 
-                        $response = $wuzService->sendMessageVideo(
-                            $phone,
-                            $base64Video,
-                            $data['caption'] ?? ''
-                        );
-                        $messageContent = $data['caption'] ?? 'Video';
+                            $wuzService->sendMessageVideo(
+                                $phone,
+                                $base64Video,
+                                $messageContent,
+                            );
+                        });
                         break;
 
-                    case 'button':
-                        $response = $wuzService->sendMessageButton(
-                            $phone,
-                            $data['message'],
-                            $data['buttons'] ?? []
-                        );
-                        $messageContent = $data['message'];
-                        break;
+                        // case 'button':
+                        //     $response = $wuzService->sendMessageButton(
+                        //         $phone,
+                        //         $data['message'],
+                        //         $data['buttons'] ?? []
+                        //     );
+                        //     $messageContent = $data['message'];
+                        //     break;
+                    default:
+                        throw new \InvalidArgumentException('Unsupported message type: '.$messageType);
                 }
             } catch (\Exception $e) {
                 Log::error('Failed to send message', ['error' => $e->getMessage()]);

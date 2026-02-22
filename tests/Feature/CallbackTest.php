@@ -154,7 +154,7 @@ test('it does not download media when config is disabled', function () {
         ->and($message->type)->toBe('image')
         ->and($message->metadata['downloaded'])->toBeFalse()
         ->and($message->metadata['error'])->toBe('Media download disabled in configuration');
-        
+
     Http::assertNothingSent();
 });
 
@@ -169,7 +169,7 @@ test('it handles disconnected event', function () {
 
     $this->device->refresh();
     expect($this->device->connected)->toBeFalse();
-    
+
     // Check log
     $log = CallbackLog::where('event_type', EventType::DISCONNECTED->value)->first();
     expect($log)->not->toBeNull();

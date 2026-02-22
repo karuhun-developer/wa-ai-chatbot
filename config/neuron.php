@@ -134,7 +134,7 @@ return [
             'key' => env('MISTRAL_KEY'),
             'model' => env('MISTRAL_EMBEDDING_MODEL', 'mistral-7b-embed-v1'),
             'dimensions' => 1024,
-        ]
+        ],
     ],
 
     /*

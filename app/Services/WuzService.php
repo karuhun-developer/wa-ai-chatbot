@@ -414,10 +414,29 @@ class WuzService
      */
     public function setWebhookEvents(string $token)
     {
+        $availableEvents = [
+            'Message', 'UndecryptableMessage', 'Receipt', 'MediaRetry', 'GroupInfo',
+            'JoinedGroup', 'Picture', 'BlocklistChange', 'Blocklist', 'Connected',
+            'Disconnected', 'ConnectFailure', 'KeepAliveRestored', 'KeepAliveTimeout',
+            'LoggedOut', 'ClientOutdated', 'TemporaryBan', 'StreamError', 'StreamReplaced',
+            'PairSuccess', 'PairError', 'QR', 'QRScannedWithoutMultidevice', 'PrivacySettings',
+            'PushNameSetting', 'UserAbout', 'AppState', 'AppStateSyncComplete', 'HistorySync',
+            'OfflineSyncCompleted', 'OfflineSyncPreview', 'CallOffer', 'CallAccept',
+            'CallTerminate', 'CallOfferNotice', 'CallRelayLatency', 'Presence', 'ChatPresence',
+            'IdentityChange', 'CATRefreshError', 'NewsletterJoin', 'NewsletterLeave',
+            'NewsletterMuteChange', 'NewsletterLiveUpdate', 'FBMessage', 'All',
+        ];
+
         $response = $this->httpClient->put($this->apiUrl.'/webhook', [
             'webhook' => url('api/v1/webhook/'.$token),
             'events' => [
-                'All',
+                'Message',
+                'UndecryptableMessage',
+                'Connected',
+                'ConnectFailure',
+                'Disconnected',
+                'LoggedOut',
+                'TemporaryBan',
             ],
             'Active' => true,
         ]);

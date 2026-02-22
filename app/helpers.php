@@ -44,8 +44,7 @@ function jidToPhone(string $jid): string
     return normalizePhoneNumber($jid);
 }
 
-
-if (!function_exists('clamp')) {
+if (! function_exists('clamp')) {
     function clamp($value, $min, $max)
     {
         if ($value < $min) {
@@ -54,6 +53,7 @@ if (!function_exists('clamp')) {
         if ($value > $max) {
             return $max;
         }
+
         return $value;
     }
 }
