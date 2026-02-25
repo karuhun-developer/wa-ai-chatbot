@@ -26,6 +26,7 @@ class SuperadminMenuSeeder extends Seeder
         $this->dashboardMenu();
         $this->deviceMenu();
         $this->callbackLogMenu();
+        $this->settingMenu();
         $this->managementMenu();
     }
 
@@ -109,6 +110,19 @@ class SuperadminMenuSeeder extends Seeder
             'url' => '/cms/management/users',
             'order' => 4,
             'active_pattern' => '/cms/management/users',
+            'status' => 1,
+        ]);
+    }
+
+    public function settingMenu()
+    {
+        Menu::create([
+            'role_id' => $this->role->id,
+            'name' => 'Settings',
+            'url' => '/cms/settings',
+            'icon' => 'Settings',
+            'order' => 99,
+            'active_pattern' => '/cms/settings',
             'status' => 1,
         ]);
     }

@@ -18,6 +18,9 @@ Route::group([
     // Management Routes
     require 'cms/management.php';
 
+    // Settings Routes
+    require 'cms/setting.php';
+
     // Logs
     Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs')->middleware('auth', 'role:superadmin');
 });
