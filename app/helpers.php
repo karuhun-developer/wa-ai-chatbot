@@ -16,25 +16,27 @@ function currencyToNumber($value)
 function normalizePhoneNumber(string $phoneNumber, string $prefix = '62'): string
 {
     // Remove all whitespace and special characters except + and numbers
-    $phoneNumber = preg_replace('/[^\d+]/', '', $phoneNumber);
+    // $phoneNumber = preg_replace('/[^\d+]/', '', $phoneNumber);
+    $phoneNumber = preg_replace('/\s+/', '', $phoneNumber);
 
     // Replace leading 0 with prefix
     if (str_starts_with($phoneNumber, '0')) {
-        return $prefix.substr($phoneNumber, 1);
+        $phoneNumber = substr($phoneNumber, 1);
+        $phoneNumber = $prefix.$phoneNumber;
     }
 
     // Replace leading + and keep the rest as is
     if (str_starts_with($phoneNumber, '+')) {
-        return substr($phoneNumber, 1);
+        $phoneNumber = substr($phoneNumber, 1);
     }
 
-    // If already starts with $prefix, return as is
-    if (str_starts_with($phoneNumber, $prefix)) {
-        return $phoneNumber;
+    // If contains :, extract the part before :
+    if (str_contains($phoneNumber, ':')) {
+        $parts = explode(':', $phoneNumber);
+        $phoneNumber = $parts[0];
     }
 
-    // For any other case, add prefix
-    return $prefix.$phoneNumber;
+    return $phoneNumber;
 }
 
 function jidToPhone(string $jid): string

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class StoreCallbackAction
 {
     public function __construct(
-        public readonly WuzService $wuzService,
+        public WuzService $wuzService,
     ) {}
 
     /**
@@ -59,6 +59,7 @@ class StoreCallbackAction
     {
         $info = $data['event']['Info'] ?? [];
         $message = $data['event']['Message'] ?? [];
+        $messageId = $info['ID'] ?? null;
 
         // Extract message details
         $chatLid = $info['Chat'] ?? null;
@@ -82,10 +83,9 @@ class StoreCallbackAction
             $messageContent = $message['conversation'];
             $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         } elseif (isset($message['extendedTextMessage'])) {
-            // Skip
-            // $messageType = 'text';
-            // $messageContent = $message['extendedTextMessage']['text'] ?? null;
-            return;
+            $messageType = 'text';
+            $messageContent = $message['extendedTextMessage']['text'] ?? null;
+            $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         } elseif (isset($message['imageMessage'])) {
             $messageType = 'image';
             $messageContent = $message['imageMessage']['caption'] ?? null;
@@ -113,10 +113,27 @@ class StoreCallbackAction
         //     'type' => $messageType,
         // ]);
 
+        // Auto mark as read
+        $isFromMe = $info['IsFromMe'] ?? false;
+        if (! $isFromMe && $messageId && $chatLid && $senderJid) {
+            try {
+                $this->wuzService = new WuzService(userToken: $device->token);
+                $this->wuzService->markMessageAsRead(
+                    messageId: $messageId,
+                    chatPhone: jidToPhone($chatLid),
+                    senderPhone: jidToPhone($senderJid),
+                );
+            } catch (\Exception $e) {
+                Log::error('Failed to auto mark message as read: '.$e->getMessage());
+            }
+        }
+
         // Send webhook if configured
         if ($webhook && $messageContent) {
-            $phone = jidToPhone($senderJid);
             try {
+                // Jid to phone number conversion
+                $phone = jidToPhone($senderJid);
+
                 Http::post($webhook->url, [
                     'event' => 'MessageReceived',
                     'key' => $device->token,

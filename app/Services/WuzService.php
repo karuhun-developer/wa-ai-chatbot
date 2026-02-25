@@ -239,6 +239,27 @@ class WuzService
     }
 
     /**
+     * Mark message as read
+     */
+    public function markMessageAsRead(string $messageId, string $chatPhone, string $senderPhone)
+    {
+        $response = $this->httpClient->post($this->apiUrl.'/chat/markread', [
+            'Id' => [
+                $messageId,
+            ],
+            'ChatPhone' => $chatPhone,
+            'SenderPhone' => $senderPhone,
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Wuz mark message as read error: '.$response->body());
+            throw new Exception('Failed to mark message as read: '.$response->body());
+        }
+
+        return $response->json();
+    }
+
+    /**
      * Send chat presence
      * type = 'composing' | 'paused'
      * media = '' | 'audio'
