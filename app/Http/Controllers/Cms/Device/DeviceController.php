@@ -35,7 +35,10 @@ class DeviceController extends Controller
         $searchBySpecific = $request?->searchBySpecific ?? '';
         $search = $request?->search ?? '';
         $model = $this->getDataWithFilter(
-            model: new Device,
+            // If user is not super admin, only show devices belonging to the user
+            model: Device::when(!$request->user()->isSuperAdmin(), function ($query) use ($request) {
+                $query->where('user_id', $request->user()->id);
+            }),
             searchBy: [
                 'name',
                 'jid',
