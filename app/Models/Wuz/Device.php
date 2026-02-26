@@ -13,10 +13,14 @@ class Device extends Model
         'token',
         'connected',
         'jid',
+        'ai_enabled',
+        'auto_read',
     ];
 
     protected $casts = [
         'connected' => 'boolean',
+        'ai_enabled' => 'boolean',
+        'auto_read' => 'boolean',
     ];
 
     public function user()

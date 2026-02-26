@@ -18,7 +18,7 @@ import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { DeviceDataItem } from '@/types/cms/device';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
-import { Plus, Settings, Trash2, Webhook, MessageSquare } from 'lucide-vue-next';
+import { Plus, Settings, Trash2, Webhook, MessageSquare, Bot, CheckCheck } from 'lucide-vue-next';
 
 defineProps<{
     data: PaginationItem<DeviceDataItem>;
@@ -46,6 +46,58 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '#',
     },
 ];
+
+const toggleAi = (device: DeviceDataItem) => {
+    router.patch(
+        edit({ device: device.id }).url.replace('/edit', ''), 
+        {
+            name: device.name,
+            ai_enabled: !device.ai_enabled,
+        },
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                toast.fire({
+                    icon: 'success',
+                    title: `AI ${!device.ai_enabled ? 'enabled' : 'disabled'} for ${device.name}`,
+                });
+            },
+            onError: () => {
+                toast.fire({
+                    icon: 'error',
+                    title: 'Failed to update AI settings.',
+                });
+            }
+        }
+    );
+};
+
+const toggleAutoRead = (device: DeviceDataItem) => {
+    router.patch(
+        edit({ device: device.id }).url.replace('/edit', ''), 
+        {
+            name: device.name,
+            auto_read: !device.auto_read,
+        },
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                toast.fire({
+                    icon: 'success',
+                    title: `Auto Read ${!device.auto_read ? 'enabled' : 'disabled'} for ${device.name}`,
+                });
+            },
+            onError: () => {
+                toast.fire({
+                    icon: 'error',
+                    title: 'Failed to update Auto Read setting.',
+                });
+            }
+        }
+    );
+};
 </script>
 
 <template>
@@ -80,7 +132,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         "
                     ></div>
 
-                    <div class="flex items-center justify-between p-6 pl-8">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4 sm:p-6 sm:pl-8 gap-4 lg:gap-0">
                         <!-- Device Info -->
                         <div class="flex flex-col gap-1">
                             <h3 class="text-lg font-semibold text-gray-900">
@@ -106,7 +158,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         </div>
 
                         <!-- Actions & Status -->
-                        <div class="flex items-center gap-4">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-4 lg:mt-0 w-full lg:w-auto border-t border-gray-100 lg:border-t-0 pt-4 lg:pt-0">
                             <!-- Stats placeholder (if needed later) -->
                             <!-- <div class="flex items-center gap-4 text-sm text-gray-500">
                                 <span>939 pasien</span>
@@ -129,7 +181,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    class="ml-2 border-red-500 text-red-500 hover:bg-red-50"
+                                    class="border-red-500 text-red-500 hover:bg-red-50"
                                     @click="
                                         confirm({
                                             title: 'Disconnect Device?',
@@ -163,16 +215,57 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                 </Button>
                             </div>
 
-                            <!-- Bot Toggle Placeholder (Visual only for now if no backend support) -->
-                            <!-- <div class="flex items-center gap-2">
-                                <span class="text-sm text-gray-500">Bot</span>
-                                <div class="h-6 w-11 rounded-full bg-emerald-500 p-1">
-                                    <div class="h-4 w-4 rounded-full bg-white"></div>
+                            <!-- Toggles Stack -->
+                            <div class="flex flex-col gap-3 w-full sm:w-auto sm:border-x sm:border-gray-200 sm:px-6 py-4 sm:py-0 border-y sm:border-y-0 border-gray-100">
+                                <!-- Bot Toggle -->
+                                <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
+                                    <div class="flex items-center gap-2">
+                                        <Bot class="h-4 w-4 text-gray-500" :class="{ 'text-emerald-500': device.ai_enabled }" />
+                                        <span class="text-sm font-medium" :class="device.ai_enabled ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500'">AI Auto-Reply</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                                        :class="device.ai_enabled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'"
+                                        role="switch"
+                                        :aria-checked="device.ai_enabled"
+                                        @click="toggleAi(device)"
+                                    >
+                                        <span class="sr-only">Toggle AI Auto-Reply</span>
+                                        <span
+                                            aria-hidden="true"
+                                            class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                            :class="device.ai_enabled ? 'translate-x-5' : 'translate-x-0'"
+                                        />
+                                    </button>
                                 </div>
-                            </div> -->
+
+                                <!-- Auto Read Toggle -->
+                                <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
+                                    <div class="flex items-center gap-2">
+                                        <CheckCheck class="h-4 w-4 text-gray-500" :class="{ 'text-emerald-500': device.auto_read }" />
+                                        <span class="text-sm font-medium" :class="device.auto_read ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500'">Auto Read</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                                        :class="device.auto_read ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'"
+                                        role="switch"
+                                        :aria-checked="device.auto_read"
+                                        @click="toggleAutoRead(device)"
+                                    >
+                                        <span class="sr-only">Toggle Auto Read</span>
+                                        <span
+                                            aria-hidden="true"
+                                            class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                            :class="device.auto_read ? 'translate-x-5' : 'translate-x-0'"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
 
                             <!-- Action Buttons -->
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0">
                                 <Link
                                     :href="test({ device: device.id }).url"
                                     v-if="hasPermission('update' + resource)"

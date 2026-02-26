@@ -15,6 +15,8 @@ class UpdateDeviceRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'ai_enabled' => 'sometimes|boolean',
+            'auto_read' => 'sometimes|boolean',
         ];
     }
 }

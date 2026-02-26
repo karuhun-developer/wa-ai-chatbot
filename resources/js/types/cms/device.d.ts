@@ -7,6 +7,8 @@ export interface DeviceDataItem {
     name: string;
     token: string;
     connected: boolean;
+    ai_enabled: boolean;
+    auto_read: boolean;
     jid?: string;
     created_at: string;
     updated_at: string;

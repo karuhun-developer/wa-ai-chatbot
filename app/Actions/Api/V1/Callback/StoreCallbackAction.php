@@ -3,6 +3,7 @@
 namespace App\Actions\Api\V1\Callback;
 
 use App\Enums\Wuz\EventType;
+use App\Jobs\Wuz\HandleAiReplyJob;
 use App\Models\Wuz\CallbackLog;
 use App\Models\Wuz\Device;
 use App\Models\Wuz\DeviceMessage;
@@ -115,7 +116,7 @@ class StoreCallbackAction
 
         // Auto mark as read
         $isFromMe = $info['IsFromMe'] ?? false;
-        if (! $isFromMe && $messageId && $chatLid && $senderJid) {
+        if (! $isFromMe && $messageId && $chatLid && $senderJid && $device->auto_read) {
             try {
                 $this->wuzService = new WuzService(userToken: $device->token);
                 $this->wuzService->markMessageAsRead(
@@ -143,6 +144,18 @@ class StoreCallbackAction
             } catch (\Exception $e) {
                 Log::error('Failed to send webhook: '.$e->getMessage());
             }
+        }
+
+        // Auto reply with AI agent if enabled
+        if ($device->ai_enabled && $messageType === 'text' && $messageContent && $senderJid) {
+            // Dispatch handle AI reply to a queue to avoid blocking the request
+            dispatch(
+                new HandleAiReplyJob(
+                    device: $device,
+                    phone: jidToPhone($senderJid),
+                    messageContent: $messageContent,
+                )
+            );
         }
     }
 
