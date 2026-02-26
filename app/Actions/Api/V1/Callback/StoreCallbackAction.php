@@ -104,14 +104,14 @@ class StoreCallbackAction
         }
 
         // Store message in database
-        // DeviceMessage::create([
-        //     'device_id' => $device->id,
-        //     'chat_jid' => $chatLid,
-        //     'sender_jid' => $senderJid,
-        //     'message' => $messageContent,
-        //     'metadata' => $metadata,
-        //     'type' => $messageType,
-        // ]);
+        DeviceMessage::create([
+            'device_id' => $device->id,
+            'chat_jid' => $chatLid,
+            'sender_jid' => $senderJid,
+            'message' => $messageContent,
+            'metadata' => $metadata,
+            'type' => $messageType,
+        ]);
 
         // Auto mark as read
         $isFromMe = $info['IsFromMe'] ?? false;

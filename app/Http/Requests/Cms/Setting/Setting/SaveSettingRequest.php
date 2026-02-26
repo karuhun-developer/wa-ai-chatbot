@@ -18,8 +18,6 @@ class SaveSettingRequest extends FormRequest
 
             // AI Settings
             'value.system_prompt' => 'nullable|string',
-            'value.ai_provider' => 'nullable|string',
-            'value.ai_model' => 'nullable|string',
         ];
     }
 }

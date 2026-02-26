@@ -6,13 +6,6 @@ import {
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useSwal } from '@/composables/useSwal';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -93,65 +86,6 @@ const description = 'Manage your system and AI configuration';
                         >
                             {{ errors['value.system_prompt'] }}
                         </span>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <div class="grid gap-2">
-                            <Label>AI Provider</Label>
-                            <Select
-                                name="value[ai_provider]"
-                                :default-value="setting?.value?.ai_provider"
-                            >
-                                <SelectTrigger>
-                                    <SelectValue
-                                        placeholder="Select Provider"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="openai"
-                                        >OpenAI</SelectItem
-                                    >
-                                    <SelectItem value="gemini"
-                                        >Google Gemini</SelectItem
-                                    >
-                                </SelectContent>
-                            </Select>
-                            <span
-                                v-if="errors['value.ai_provider']"
-                                class="text-sm text-destructive"
-                            >
-                                {{ errors['value.ai_provider'] }}
-                            </span>
-                        </div>
-
-                        <div class="grid gap-2">
-                            <Label>AI Model</Label>
-                            <Select
-                                name="value[ai_model]"
-                                :default-value="setting?.value?.ai_model"
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select Model" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="google/gemini-2.5-flash"
-                                        >Gemini 2.5 Flash</SelectItem
-                                    >
-                                    <SelectItem value="google/gemini-2.5-pro"
-                                        >Gemini 2.5 Pro</SelectItem
-                                    >
-                                    <SelectItem value="openai/gpt-5-mini"
-                                        >GPT-5 Mini</SelectItem
-                                    >
-                                </SelectContent>
-                            </Select>
-                            <span
-                                v-if="errors['value.ai_model']"
-                                class="text-sm text-destructive"
-                            >
-                                {{ errors['value.ai_model'] }}
-                            </span>
-                        </div>
                     </div>
                 </div>
             </Form>

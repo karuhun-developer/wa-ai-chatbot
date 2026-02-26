@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da144bddada08938b1d437ff8b846262",
+    "content-hash": "d4c02ae245c3da6d8f538abf39efca87",
     "packages": [
         {
             "name": "aaronfrancis/fast-paginate",
@@ -1432,66 +1432,70 @@
             "time": "2025-06-17T20:20:10+00:00"
         },
         {
-            "name": "inspector-apm/inspector-php",
-            "version": "3.16.13",
+            "name": "laravel/ai",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/inspector-apm/inspector-php.git",
-                "reference": "4b215e3d34b127174ac0b2f84134eccbe4b3c01f"
+                "url": "https://github.com/laravel/ai.git",
+                "reference": "c874cbcf000e0406606bc6512a613998fe0f8e3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inspector-apm/inspector-php/zipball/4b215e3d34b127174ac0b2f84134eccbe4b3c01f",
-                "reference": "4b215e3d34b127174ac0b2f84134eccbe4b3c01f",
+                "url": "https://api.github.com/repos/laravel/ai/zipball/c874cbcf000e0406606bc6512a613998fe0f8e3d",
+                "reference": "c874cbcf000e0406606bc6512a613998fe0f8e3d",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                "illuminate/console": "^12.0",
+                "illuminate/container": "^12.0",
+                "illuminate/contracts": "^12.0",
+                "illuminate/filesystem": "^12.0",
+                "illuminate/json-schema": "^12.0",
+                "illuminate/support": "^12.0",
+                "laravel/prompts": "^0.3.6",
+                "laravel/serializable-closure": "^2.0",
+                "php": "^8.3",
+                "prism-php/prism": "^0.99.0"
             },
             "require-dev": {
-                "ext-curl": "*",
-                "friendsofphp/php-cs-fixer": "^3.75",
-                "neuron-core/neuron-ai": "^2.8",
-                "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^9.0",
-                "rector/rector": "^2.2",
-                "tomasvotruba/type-coverage": "^2.0"
+                "laravel/pint": "^1.26",
+                "mockery/mockery": "^1.6.12",
+                "orchestra/testbench": "^10.6"
             },
             "type": "library",
             "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Ai\\AiServiceProvider"
+                    ]
+                },
                 "branch-alias": {
-                    "dev-master": "3.16.x-dev",
-                    "dev-develop": "3.16.x-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
+                "files": [
+                    "functions.php"
+                ],
                 "psr-4": {
-                    "Inspector\\": "src/"
+                    "Laravel\\Ai\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Valerio Barbera",
-                    "email": "valerio@inspector.dev"
-                }
-            ],
-            "description": "Inspector monitoring for PHP applications.",
+            "description": "The official AI SDK for Laravel.",
+            "homepage": "https://github.com/laravel/ai",
             "keywords": [
-                "inspector",
-                "monitoring",
-                "observability",
-                "php",
-                "telemetry"
+                "ai",
+                "laravel"
             ],
             "support": {
-                "issues": "https://github.com/inspector-apm/inspector-php/issues",
-                "source": "https://github.com/inspector-apm/inspector-php/tree/3.16.13"
+                "issues": "https://github.com/laravel/ai/issues",
+                "source": "https://github.com/laravel/ai"
             },
-            "time": "2026-02-13T16:58:07+00:00"
+            "time": "2026-02-25T15:40:18+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -3092,147 +3096,6 @@
             "time": "2026-02-13T03:05:33+00:00"
         },
         {
-            "name": "neuron-core/neuron-ai",
-            "version": "2.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/neuron-core/neuron-ai.git",
-                "reference": "1b4a7337dee0a1cab7b8994eb587bf768faab140"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/neuron-core/neuron-ai/zipball/1b4a7337dee0a1cab7b8994eb587bf768faab140",
-                "reference": "1b4a7337dee0a1cab7b8994eb587bf768faab140",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.9",
-                "inspector-apm/inspector-php": "^3.16.12",
-                "php": "^8.1",
-                "psr/http-message": "^1.0|^2.0",
-                "psr/log": "^1.0|^2.0|^3.0"
-            },
-            "require-dev": {
-                "aws/aws-sdk-php": "^3.209",
-                "elasticsearch/elasticsearch": "^8.0",
-                "ext-pdo": "*",
-                "friendsofphp/php-cs-fixer": "^3.75",
-                "google/auth": "^1.49",
-                "html2text/html2text": "^4.3",
-                "illuminate/database": "^10.0|^11.0|^12.0",
-                "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^9.0",
-                "rector/rector": "^2.0",
-                "spatie/fork": "^1.2",
-                "tomasvotruba/type-coverage": "^2.0",
-                "typesense/typesense-php": "^5.0"
-            },
-            "bin": [
-                "bin/neuron"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "NeuronAI\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Valerio Barbera",
-                    "email": "valerio@inspector.dev"
-                }
-            ],
-            "description": "The PHP Agentic Framework.",
-            "support": {
-                "issues": "https://github.com/neuron-core/neuron-ai/issues",
-                "source": "https://github.com/neuron-core/neuron-ai/tree/2.12.6"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/neuron-core",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-02-18T16:33:06+00:00"
-        },
-        {
-            "name": "neuron-core/neuron-laravel",
-            "version": "0.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/neuron-core/neuron-laravel.git",
-                "reference": "228b31b82c83e05d522923a9af0215580e31542b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/neuron-core/neuron-laravel/zipball/228b31b82c83e05d522923a9af0215580e31542b",
-                "reference": "228b31b82c83e05d522923a9af0215580e31542b",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "^10.0|^11.0|^12.0",
-                "illuminate/contracts": "^10.0|^11.0|^12.0",
-                "illuminate/support": "^10.0|^11.0|^12.0",
-                "neuron-core/neuron-ai": "^2.10",
-                "php": "^8.2"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.75",
-                "larastan/larastan": "^3.0",
-                "livewire/livewire": "^3.7",
-                "orchestra/testbench": "^10.0",
-                "rector/rector": "^2.2",
-                "tomasvotruba/type-coverage": "^2.0"
-            },
-            "suggest": {
-                "inspector-apm/inspector-laravel": "^4.18.2"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "AIProvider": "NeuronAI\\Laravel\\Facades\\AIProvider",
-                        "VectorStore": "NeuronAI\\Laravel\\Facades\\VectorStore",
-                        "EmbeddingProvider": "NeuronAI\\Laravel\\Facades\\EmbeddingProvider"
-                    },
-                    "providers": [
-                        "NeuronAI\\Laravel\\NeuronAIServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "NeuronAI\\Laravel\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Valerio Barbera",
-                    "email": "valerio@inspector.dev"
-                }
-            ],
-            "description": "Official Neuron AI Laravel SDK.",
-            "keywords": [
-                "ai",
-                "ai-agent",
-                "laravel",
-                "llm"
-            ],
-            "support": {
-                "issues": "https://github.com/neuron-core/neuron-laravel/issues",
-                "source": "https://github.com/neuron-core/neuron-laravel/tree/0.3.4"
-            },
-            "time": "2026-01-13T17:11:55+00:00"
-        },
-        {
             "name": "nikic/php-parser",
             "version": "v5.7.0",
             "source": {
@@ -3682,6 +3545,85 @@
                 }
             ],
             "time": "2026-02-11T17:30:28+00:00"
+        },
+        {
+            "name": "prism-php/prism",
+            "version": "v0.99.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prism-php/prism.git",
+                "reference": "7ebf450f6137fcb6d79cc52f5bffb6d7569b2019"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prism-php/prism/zipball/7ebf450f6137fcb6d79cc52f5bffb6d7569b2019",
+                "reference": "7ebf450f6137fcb6d79cc52f5bffb6d7569b2019",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "laravel/framework": "^11.0|^12.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "brianium/paratest": "^7.8.4",
+                "laravel/mcp": "^0.5.2",
+                "laravel/pint": "^1.14",
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^10",
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin-arch": "^3.0",
+                "pestphp/pest-plugin-laravel": "^3.0",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpdoc-parser": "^2.0",
+                "phpstan/phpstan": "2.1.34",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "projektgopher/whisky": "^0.7.0",
+                "rector/rector": "2.3.3",
+                "spatie/laravel-ray": "^1.39",
+                "symplify/rule-doc-generator-contracts": "^11.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "PrismServer": "Prism\\Prism\\Facades\\PrismServer"
+                    },
+                    "providers": [
+                        "Prism\\Prism\\PrismServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Prism\\Prism\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TJ Miller",
+                    "email": "hello@echolabs.dev"
+                }
+            ],
+            "description": "A powerful Laravel package for integrating Large Language Models (LLMs) into your applications.",
+            "support": {
+                "issues": "https://github.com/prism-php/prism/issues",
+                "source": "https://github.com/prism-php/prism/tree/v0.99.19"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sixlive",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-01-28T12:09:02+00:00"
         },
         {
             "name": "psr/clock",

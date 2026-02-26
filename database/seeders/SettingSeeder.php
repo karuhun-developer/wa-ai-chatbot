@@ -16,8 +16,6 @@ class SettingSeeder extends Seeder
             Setting::create([
                 'value' => [
                     'system_prompt' => 'You are a helpful AI assistant.',
-                    'ai_provider' => 'openrouter',
-                    'ai_model' => 'google/gemini-2.5-flash',
                 ],
             ]);
         }

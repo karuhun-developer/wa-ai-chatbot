@@ -11,8 +11,8 @@
     "nightwatch_mcp": false,
     "packages": [
         "laravel/fortify",
-        "neuron-core/neuron-laravel",
-        "spatie/laravel-medialibrary"
+        "spatie/laravel-medialibrary",
+        "laravel/ai"
     ],
     "sail": false,
     "skills": [
@@ -20,6 +20,7 @@
         "pest-testing",
         "inertia-vue-development",
         "tailwindcss-development",
+        "developing-with-ai-sdk",
         "developing-with-fortify",
         "medialibrary-development"
     ]
