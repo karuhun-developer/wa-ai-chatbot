@@ -1,6 +1,6 @@
 # Voda
 
-A powerful WhatsApp management application built with **Laravel 12**, **Inertia.js v2**, **Vue 3** and **WuzAPI**.
+A powerful WhatsApp management application built with **Laravel 12**, **Livewire 4** and **WuzAPI**.
 
 ![alt text](image.png)
 
@@ -21,8 +21,7 @@ https://www.postman.com/restless-comet-598061/workspace/hotel/collection/8500651
 ## 📦 Tech Stack
 
 - **Laravel**: Web Application Framework
-- **Inertia.js**: Server-driven Single Page Apps
-- **Vue.js**: Progressive JavaScript Framework
+- **Livewire**: Full-stack framework for Laravel that makes building dynamic interfaces simple.
 - **WuzAPI**: WhatsApp API Gateway ([https://github.com/asternic/wuzapi](https://github.com/asternic/wuzapi))
 
 ## 🛠 Installation
@@ -72,7 +71,7 @@ Follow these steps to set up the project locally.
 6.  **Install Node Dependencies**
 
     ```bash
-    npm install
+    yarn
     ```
 
 7.  **Start Development Server**
@@ -82,7 +81,7 @@ Follow these steps to set up the project locally.
     ```
 
     ```bash
-    npm run dev
+    yarn dev
     ```
 
     Access the application at `http://localhost:8000`.
