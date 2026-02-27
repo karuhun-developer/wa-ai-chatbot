@@ -37,4 +37,9 @@ class Device extends Model
     {
         return $this->hasMany(CallbackLog::class);
     }
+
+    public function contacts()
+    {
+        return $this->hasMany(DeviceContact::class);
+    }
 }

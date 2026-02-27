@@ -6,6 +6,7 @@ use App\Enums\Wuz\EventType;
 use App\Jobs\Wuz\HandleAiReplyJob;
 use App\Models\Wuz\CallbackLog;
 use App\Models\Wuz\Device;
+use App\Models\Wuz\DeviceContact;
 use App\Models\Wuz\DeviceMessage;
 use App\Services\WuzService;
 use Illuminate\Support\Facades\Http;
@@ -103,6 +104,18 @@ class StoreCallbackAction
             $metadata = $this->downloadMedia($device, $message['documentMessage'], 'document');
             $webhook = $device->webhooks()->where('event', 'MessageReceived')->first() ?? $webhook;
         }
+
+        // Auto Save contact info
+        DeviceContact::updateOrCreate(
+            [
+                'device_id' => $device->id,
+                'phone' => jidToPhone($senderJid),
+            ],
+            [
+                'push_name' => $info['PushName'] ?? null,
+                'phone_jid' => $senderJid,
+            ],
+        );
 
         // Store message in database
         DeviceMessage::create([
