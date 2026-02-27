@@ -1,6 +1,6 @@
 
 <div>
-    <div class="flex h-full flex-col items-center justify-center p-6">
+    <div class="flex h-full flex-col items-center justify-center p-6" wire:poll.5s>
         <div class="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-sm">
             <h2
                 class="text-center text-xl font-semibold text-gray-900 dark:text-gray-100"
