@@ -39,7 +39,7 @@ class HandleAiReplyJob implements ShouldQueue
 
             // If a conversation doesn't exist yet, continueLastConversation or start fresh
             $response = (new WuzAgent)
-                ->forUser(['id' => $chatJid])
+                ->forUser((object) ['id' => $chatJid])
                 ->continueLastConversation((object) ['id' => $chatJid])
                 ->prompt(prompt: $this->messageContent);
 
