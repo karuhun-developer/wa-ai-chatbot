@@ -40,6 +40,6 @@ class Device extends Model
 
     public function contacts()
     {
-        return $this->hasMany(DeviceContact::class);
+        return $this->hasMany(DeviceContact::class, 'device_id');
     }
 }

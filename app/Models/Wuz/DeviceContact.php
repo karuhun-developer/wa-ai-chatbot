@@ -18,4 +18,9 @@ class DeviceContact extends Model
     {
         return $this->belongsTo(Device::class);
     }
+
+    public function messages()
+    {
+        return $this->hasMany(DeviceMessage::class, 'device_contact_id');
+    }
 }

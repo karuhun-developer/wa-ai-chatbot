@@ -4,6 +4,7 @@ namespace App\Actions\Cms\Device\DeviceMessage;
 
 use App\Jobs\Wuz\SendWuzMessageJob;
 use App\Models\Wuz\Device;
+use App\Models\Wuz\DeviceContact;
 use App\Models\Wuz\DeviceMessage;
 use App\Models\Wuz\PhoneJid;
 use App\Services\WuzService;
@@ -132,9 +133,21 @@ class SendMessageAction
                 throw $e;
             }
 
+            // Auto Save contact info
+            $contact = DeviceContact::updateOrCreate(
+                [
+                    'device_id' => $device->id,
+                    'phone' => $phone,
+                ],
+                [
+                    'phone_jid' => $phoneJid->jid,
+                ],
+            );
+
             // Store message in device_messages
             return DeviceMessage::create([
                 'device_id' => $device->id,
+                'device_contact_id' => $contact->id,
                 'chat_jid' => $phoneJid->jid,
                 'sender_jid' => $device->jid,
                 'message' => $messageContent,

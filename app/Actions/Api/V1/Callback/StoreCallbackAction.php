@@ -106,7 +106,7 @@ class StoreCallbackAction
         }
 
         // Auto Save contact info
-        DeviceContact::updateOrCreate(
+        $contact = DeviceContact::updateOrCreate(
             [
                 'device_id' => $device->id,
                 'phone' => jidToPhone($senderJid),
@@ -120,6 +120,7 @@ class StoreCallbackAction
         // Store message in database
         DeviceMessage::create([
             'device_id' => $device->id,
+            'device_contact_id' => $contact->id,
             'chat_jid' => $chatLid,
             'sender_jid' => $senderJid,
             'message' => $messageContent,
