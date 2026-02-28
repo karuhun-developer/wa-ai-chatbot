@@ -18,7 +18,7 @@ class WuzConversationStore implements ConversationStore
     public function latestConversationId(string|int $userId): ?string
     {
         return DB::table('agent_conversations')
-            ->where('chat_jid', $userId)
+            ->where('device_contact_id', $userId)
             ->orderBy('updated_at', 'desc')
             ->first()?->id;
     }
@@ -32,7 +32,7 @@ class WuzConversationStore implements ConversationStore
 
         DB::table('agent_conversations')->insert([
             'id' => $conversationId,
-            'chat_jid' => $userId,
+            'device_contact_id' => $userId,
             'title' => $title,
             'created_at' => now(),
             'updated_at' => now(),
@@ -51,7 +51,7 @@ class WuzConversationStore implements ConversationStore
         DB::table('agent_conversation_messages')->insert([
             'id' => $messageId,
             'conversation_id' => $conversationId,
-            'chat_jid' => $userId,
+            'device_contact_id' => $userId,
             'agent' => $prompt->agent::class,
             'role' => 'user',
             'content' => $prompt->prompt,
@@ -77,7 +77,7 @@ class WuzConversationStore implements ConversationStore
         DB::table('agent_conversation_messages')->insert([
             'id' => $messageId,
             'conversation_id' => $conversationId,
-            'chat_jid' => $userId,
+            'device_contact_id' => $userId,
             'agent' => $prompt->agent::class,
             'role' => 'assistant',
             'content' => $response->text,

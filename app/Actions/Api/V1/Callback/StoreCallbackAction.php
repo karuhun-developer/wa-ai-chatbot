@@ -166,6 +166,8 @@ class StoreCallbackAction
             dispatch(
                 new HandleAiReplyJob(
                     device: $device,
+                    contact: $contact,
+                    chatLid: $chatLid,
                     phone: jidToPhone($senderJid),
                     messageContent: $messageContent,
                 )

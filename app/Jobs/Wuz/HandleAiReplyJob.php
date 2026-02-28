@@ -4,6 +4,7 @@ namespace App\Jobs\Wuz;
 
 use App\Ai\Agents\WuzAgent;
 use App\Models\Wuz\Device;
+use App\Models\Wuz\DeviceContact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,6 +21,8 @@ class HandleAiReplyJob implements ShouldQueue
      */
     public function __construct(
         public readonly Device $device,
+        public readonly DeviceContact $contact,
+        public readonly string $chatLid,
         public readonly string $phone,
         public readonly string $messageContent,
     ) {}
@@ -34,16 +37,24 @@ class HandleAiReplyJob implements ShouldQueue
         }
 
         try {
-            // Reconstruct JID from phone. This will be stored as `chat_jid` in history tables via WuzConversationStore
-            $chatJid = "{$this->phone}@s.whatsapp.net";
-
             // If a conversation doesn't exist yet, continueLastConversation or start fresh
             $response = (new WuzAgent)
-                ->forUser((object) ['id' => $chatJid])
-                ->continueLastConversation((object) ['id' => $chatJid])
+                ->forUser((object) ['id' => $this->contact->id])
+                ->continueLastConversation((object) ['id' => $this->contact->id])
                 ->prompt(prompt: $this->messageContent);
 
             if ($response->text) {
+                // Store message in database
+                DeviceMessage::create([
+                    'device_id' => $this->device->id,
+                    'device_contact_id' => $this->contact->id,
+                    'chat_jid' => $this->chatLid,
+                    'sender_jid' => $this->device->jid,
+                    'message' => $this->messageContent,
+                    'metadata' => [],
+                    'type' => 'text',
+                ]);
+
                 // Dispatch to a queue to avoid blocking the request and to simulate typing presence
                 dispatch(
                     new SendWuzMessageJob(
