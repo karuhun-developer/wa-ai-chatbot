@@ -23,18 +23,21 @@ class ConfigureDeviceProxy
         );
 
         // Configure Proxy settings in Wuz
-        DB::transaction(function () use ($device, $proxy) {
+        $proxyUrl = $proxy['proxy_url'] ?? null;
+        $enableProxy = $proxy['proxy_enabled'] ?? false;
+
+        DB::transaction(function () use ($device, $proxyUrl, $enableProxy) {
             if (! empty($proxy['proxy_url'] ?? null)) {
                 $this->wuzService->setProxy(
-                    proxyUrl: $proxy['proxy_url'] ?? null,
-                    enable: $proxy['proxy_enabled'] ?? false,
+                    proxyUrl: $proxyUrl,
+                    enable: $enableProxy,
                 );
             }
 
             // Update device proxy settings
             $device->update([
-                'proxy_url' => $proxy['proxy_url'] ?? null,
-                'proxy_enabled' => $proxy['proxy_enabled'] ?? false,
+                'proxy_url' => $enableProxy ? $proxyUrl : null,
+                'proxy_enabled' => $enableProxy,
             ]);
         });
     }
