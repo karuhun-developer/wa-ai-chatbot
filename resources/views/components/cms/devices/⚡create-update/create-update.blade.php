@@ -108,4 +108,42 @@
             </div>
         </form>
     </flux:modal>
+
+    <flux:modal
+        name="proxyModal"
+        class="max-w-2xl md:min-w-2xl"
+        flyout
+    >
+        <form class="space-y-6" wire:submit.prevent="saveProxy">
+            <div>
+                <flux:heading size="lg">
+                    Manage Proxy - {{ $name }}
+                </flux:heading>
+                <flux:text class="mt-2">
+                    Configure proxy settings for the device. This is useful if your server is behind a proxy or firewall.
+                </flux:text>
+            </div>
+            <flux:field>
+                <flux:label>
+                    Proxy URL
+                </flux:label>
+                <flux:text>
+                    The URL of the proxy server, including the port (e.g., socks5://proxy.example.com:1080).
+                </flux:text>
+                <flux:input wire:model="proxy_url" type="text" placeholder="socks5://proxy.example.com:1080" />
+                <flux:error name="proxy_url" />
+            </flux:field>
+
+            <flux:field>
+                <flux:switch wire:model="proxy_enabled" label="Enable Proxy" />
+                <flux:error name="proxy_enabled" />
+            </flux:field>
+
+            <div class="flex">
+                <flux:spacer />
+
+                <flux:button type="submit" variant="primary">Save changes</flux:button>
+            </div>
+        </form>
+    </flux:modal>
 </div>

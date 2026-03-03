@@ -15,12 +15,15 @@ class Device extends Model
         'jid',
         'ai_enabled',
         'auto_read',
+        'proxy_url',
+        'proxy_enabled',
     ];
 
     protected $casts = [
         'connected' => 'boolean',
         'ai_enabled' => 'boolean',
         'auto_read' => 'boolean',
+        'proxy_enabled' => 'boolean',
     ];
 
     public function user()

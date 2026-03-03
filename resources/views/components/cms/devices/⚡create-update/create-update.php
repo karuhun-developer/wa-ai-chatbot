@@ -1,8 +1,9 @@
 <?php
 
+use App\Actions\Cms\Device\Device\ConfigureDeviceProxy;
 use App\Actions\Cms\Device\Device\StoreDeviceAction;
+use App\Actions\Cms\Device\Device\SyncDeviceWebhooksAction;
 use App\Actions\Cms\Device\Device\UpdateDeviceAction;
-use App\Actions\Cms\Device\DeviceWebhook\SyncDeviceWebhooksAction;
 use App\Models\Wuz\Device;
 use Flux\Flux;
 use Illuminate\Support\Facades\Gate;
@@ -39,6 +40,10 @@ new class extends Component
 
     public $webhook;
 
+    public $proxy_url;
+
+    public $proxy_enabled;
+
     // Get record data
     public function getRecordData($id)
     {
@@ -49,6 +54,8 @@ new class extends Component
         $this->name = $record->name;
         $this->ai_enabled = $record->ai_enabled;
         $this->auto_read = $record->auto_read;
+        $this->proxy_url = $record->proxy_url;
+        $this->proxy_enabled = $record->proxy_enabled;
 
         // Load webhooks
         $this->webhook = [
@@ -91,10 +98,12 @@ new class extends Component
             'ai_enabled',
             'auto_read',
             'webhook',
+            'proxy_url',
         ]);
 
         $this->ai_enabled = false;
         $this->auto_read = false;
+        $this->proxy_enabled = false;
         $this->webhook = [
         ];
     }
@@ -150,5 +159,35 @@ new class extends Component
 
         // Close modal
         Flux::modal('webhookModal')->close();
+    }
+
+    public function saveProxy(ConfigureDeviceProxy $saveProxyAction)
+    {
+        try {
+            $saveProxyAction->handle(
+                device: Device::findOrFail($this->id),
+                proxy: $this->only('proxy_url', 'proxy_enabled'),
+            );
+
+            // Toast message
+            $this->dispatch('toast',
+                type: 'success',
+                message: 'Proxy settings updated successfully',
+            );
+
+            // Reset data table
+            $this->dispatch('reset-parent-page');
+
+            // Close modal
+            Flux::modal('proxyModal')->close();
+        } catch (\Exception $e) {
+            // Toast message
+            $this->dispatch('toast',
+                type: 'error',
+                message: 'Failed to update proxy settings: '.$e->getMessage(),
+            );
+
+            return;
+        }
     }
 };

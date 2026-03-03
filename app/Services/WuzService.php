@@ -219,6 +219,24 @@ class WuzService
     }
 
     /**
+     * Set Proxy
+     */
+    public function setProxy(string $proxyUrl, bool $enable = true)
+    {
+        $response = $this->httpClient->post($this->apiUrl.'/session/proxy', [
+            'proxy_url' => $proxyUrl,
+            'enable' => $enable,
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Wuz set proxy error: '.$response->body());
+            throw new Exception('Failed to set proxy: '.$response->body());
+        }
+
+        return $response->json();
+    }
+
+    /**
      * Send message text
      */
     public function sendMessageText(string $to, string $message, ?bool $linkPreview = false)

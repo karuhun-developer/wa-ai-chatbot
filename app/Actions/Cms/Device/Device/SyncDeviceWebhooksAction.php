@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Cms\Device\DeviceWebhook;
+namespace App\Actions\Cms\Device\Device;
 
 use App\Models\Wuz\Device;
 use Illuminate\Support\Facades\DB;

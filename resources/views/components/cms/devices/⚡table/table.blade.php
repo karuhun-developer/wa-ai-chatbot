@@ -172,6 +172,18 @@
                         <flux:button
                             variant="outline"
                             size="sm"
+                            icon="shield-exclamation"
+                            @click="
+                                $flux.modal('proxyModal').show();
+                                $wire.dispatch('set-action', {
+                                    id: '{{ $d->id }}',
+                                });
+                            ">
+                            Set Proxy
+                        </flux:button>
+                        <flux:button
+                            variant="outline"
+                            size="sm"
                             icon="trash"
                             @click="$wire.dispatch('confirm', {
                                 function: 'delete',
