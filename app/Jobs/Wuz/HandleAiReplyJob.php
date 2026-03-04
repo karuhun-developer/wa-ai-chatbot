@@ -5,6 +5,7 @@ namespace App\Jobs\Wuz;
 use App\Ai\Agents\WuzAgent;
 use App\Models\Wuz\Device;
 use App\Models\Wuz\DeviceContact;
+use App\Models\Wuz\DeviceMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
