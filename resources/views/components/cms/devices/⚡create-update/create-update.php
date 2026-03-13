@@ -111,6 +111,8 @@ new class extends Component
     // Handle form submit
     public function submit(StoreDeviceAction $storeAction, UpdateDeviceAction $updateAction)
     {
+        Gate::authorize(($this->isUpdate ? 'update' : 'create').$this->modelInstance);
+
         $this->validate([
             'name' => 'required|string|max:255',
             'ai_enabled' => 'required|boolean',
@@ -143,6 +145,8 @@ new class extends Component
 
     public function saveWebhooks(SyncDeviceWebhooksAction $syncWebhooksAction)
     {
+        Gate::authorize(($this->isUpdate ? 'update' : 'create').$this->modelInstance);
+
         $syncWebhooksAction->handle(
             device: Device::findOrFail($this->id),
             webhooks: $this->webhook,
@@ -163,6 +167,8 @@ new class extends Component
 
     public function saveProxy(ConfigureDeviceProxy $saveProxyAction)
     {
+        Gate::authorize(($this->isUpdate ? 'update' : 'create').$this->modelInstance);
+
         try {
             $saveProxyAction->handle(
                 device: Device::findOrFail($this->id),
