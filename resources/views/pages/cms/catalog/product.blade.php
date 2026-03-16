@@ -1,47 +1,35 @@
 <?php
 
-use App\Models\Wuz\CallbackLog;
 use Illuminate\View\View;
 
 use function Laravel\Folio\name;
 use function Laravel\Folio\render;
 
-name('cms.callback-logs.show');
+name('cms.catalog.product');
 
 // Page title and breadcrumbs
 render(function (View $view) {
-    $log = CallbackLog::findOrFail(request()->query('log'));
-
     // Page title and breadcrumbs
-    $title = 'Callback Details';
-    $description = 'View the details of this WuzApi callback log entry here.';
+    $title = 'Product';
+    $description = 'Manage the product for your catalog. Create, update, and organize to keep your products well-structured.';
     $breadcrumbs = [
         [
-            'label' => 'Callback Logs',
-            'url' => route('cms.callback-logs.index')
+            'label' => 'Catalog',
+            'url' => '#'
         ],
         [
-            'label' => $title,
+            'label' => 'Product',
             'url' => null
-        ]
+        ],
     ];
 
-    $view->with(compact('title', 'description', 'breadcrumbs', 'log'));
+    $view->with(compact('title', 'description', 'breadcrumbs'));
 }); ?>
 
 <x-layouts.app :$title>
     <div class="w-full">
         <div class="flex justify-between items-center mb-5">
-            <div class="flex items-center gap-4">
-                <flux:button
-                    href="{{ route('cms.callback-logs.index') }}"
-                    size="sm"
-                    variant="primary"
-                    icon="arrow-left"
-                    wire:navigate
-                />
-                <h1 class="text-3xl font-bold">{{ $title }}</h1>
-            </div>
+            <h1 class="text-3xl font-bold">{{ $title }}</h1>
             <flux:breadcrumbs>
                 <flux:breadcrumbs.item href="{{ route('cms.dashboard') }}" icon="home" />
                 @foreach($breadcrumbs as $breadcrumb)
@@ -58,6 +46,6 @@ render(function (View $view) {
                 {{ $description }}
             </flux:text>
         </div>
-        <livewire:cms.callback-logs.show :$log />
+        <livewire:cms.catalog.product.table />
     </div>
 </x-layouts.app>

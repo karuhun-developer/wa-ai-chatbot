@@ -21,6 +21,7 @@ class SuperadminMenuSeeder extends Seeder
         // Create menu
         $this->dashboardMenu();
         $this->deviceMenu();
+        $this->catalogMenu();
         $this->callbackLogMenu();
         $this->settingMenu();
         $this->managementMenu();
@@ -52,6 +53,35 @@ class SuperadminMenuSeeder extends Seeder
         ]);
     }
 
+    public function catalogMenu()
+    {
+        $catalog = Menu::create([
+            'role_id' => $this->role->id,
+            'name' => 'Catalog',
+            'url' => '#',
+            'icon' => 'boxes',
+            'order' => 3,
+            'active_pattern' => 'cms.catalog',
+            'status' => 1,
+        ]);
+        $catalog->subMenu()->create([
+            'role_id' => $this->role->id,
+            'name' => 'Product Category',
+            'url' => 'cms.catalog.product-category',
+            'order' => 1,
+            'active_pattern' => 'cms.catalog.product-category',
+            'status' => 1,
+        ]);
+        $catalog->subMenu()->create([
+            'role_id' => $this->role->id,
+            'name' => 'Product',
+            'url' => 'cms.catalog.product',
+            'order' => 2,
+            'active_pattern' => 'cms.catalog.product',
+            'status' => 1,
+        ]);
+    }
+
     public function callbackLogMenu()
     {
         Menu::create([
@@ -59,7 +89,7 @@ class SuperadminMenuSeeder extends Seeder
             'name' => 'Callback Logs',
             'url' => 'cms.callback-logs.index',
             'icon' => 'table-cells',
-            'order' => 3,
+            'order' => 70,
             'active_pattern' => 'cms.callback-logs',
             'status' => 1,
         ]);
