@@ -56,6 +56,14 @@
             </div>
 
             <flux:field>
+                <flux:label>Image</flux:label>
+                <flux:text>Upload an image for the product (optional).</flux:text>
+                <x-file-preview :file="$image" :form_file="$oldData?->getFirstMediaUrl('image')" />
+                <x-file-upload model="image" accept="image/*" />
+                <flux:error name="image" />
+            </flux:field>
+
+            <flux:field>
                 <flux:label>Checkout URL</flux:label>
                 <flux:text>External checkout URL (if any).</flux:text>
                 <flux:input wire:model="checkout_url" type="url" />

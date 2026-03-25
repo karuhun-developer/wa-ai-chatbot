@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component
 {
+    use WithFileUploads;
+
     // Model instance
     public $modelInstance = Product::class;
 
@@ -38,6 +41,8 @@ new class extends Component
     // Record data
     public $id;
 
+    public $oldData;
+
     public $sku;
 
     public $name;
@@ -54,12 +59,15 @@ new class extends Component
 
     public $product_categories = [];
 
+    public $image;
+
     // Get record data
     public function getRecordData($id)
     {
         Gate::authorize('show'.$this->modelInstance);
 
         $record = Product::findOrFail($id);
+        $this->oldData = $record;
         $this->fill(
             $record->only(
                 'id',
@@ -75,6 +83,7 @@ new class extends Component
         $this->product_categories = $record->productCategories->pluck('id')->toArray();
         $this->price = numberToCurrency($this->price);
         $this->stock = numberToCurrency($this->stock);
+        $this->reset('image');
     }
 
     // Reset record data
@@ -90,6 +99,7 @@ new class extends Component
             'stock',
             'rating',
             'product_categories',
+            'image',
         ]);
 
         $this->price = 0;
@@ -112,6 +122,7 @@ new class extends Component
             'checkout_url' => 'nullable|url',
             'stock' => 'nullable|integer|min:0',
             'product_categories' => 'array',
+            'image' => 'nullable|image|max:2048', // Max 2MB
         ]);
 
         $submitData = $this->all();
@@ -140,5 +151,8 @@ new class extends Component
 
         // Close modal
         Flux::modal('defaultModal')->close();
+
+        // Reset record data
+        $this->resetRecordData();
     }
 };
