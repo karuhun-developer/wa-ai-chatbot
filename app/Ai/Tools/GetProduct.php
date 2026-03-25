@@ -25,21 +25,21 @@ class GetProduct implements Tool
     {
         $query = Product::query()->with('productCategories');
 
-        if ($name = $request->get('name')) {
+        if ($name = $request['name'] ?? null) {
             $query->where('name', 'like', '%'.$name.'%');
         }
 
-        if ($category = $request->get('category')) {
+        if ($category = $request['category'] ?? null) {
             $query->whereHas('productCategories', function ($q) use ($category) {
                 $q->where('name', 'like', '%'.$category.'%');
             });
         }
 
-        if ($minPrice = $request->get('min_price')) {
+        if ($minPrice = $request['min_price'] ?? null) {
             $query->where('price', '>=', $minPrice);
         }
 
-        if ($maxPrice = $request->get('max_price')) {
+        if ($maxPrice = $request['max_price'] ?? null) {
             $query->where('price', '<=', $maxPrice);
         }
 
