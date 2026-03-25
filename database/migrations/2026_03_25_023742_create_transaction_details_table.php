@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(App\Models\Wuz\Transaction::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(App\Models\Transaction\Transaction::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(App\Models\Catalog\Product::class)->constrained()->cascadeOnDelete();
             $table->json('product_snapshot');
             $table->unsignedInteger('quantity')->default(1);
