@@ -11,7 +11,8 @@
     "nightwatch_mcp": false,
     "packages": [
         "laravel/fortify",
-        "spatie/laravel-medialibrary"
+        "spatie/laravel-medialibrary",
+        "laravel/ai"
     ],
     "sail": false,
     "skills": [
@@ -20,6 +21,7 @@
         "livewire-development",
         "pest-testing",
         "tailwindcss-development",
+        "developing-with-ai-sdk",
         "developing-with-fortify",
         "medialibrary-development"
     ]
