@@ -47,7 +47,7 @@ new class extends BaseComponent
 
         // Query data with filters
         $data = $this->getDataWithFilter(
-            model: new Product,
+            model: Product::with('media'),
             searchBy: $this->searchBy,
             orderBy: $this->paginationOrderBy,
             order: $this->paginationOrder,

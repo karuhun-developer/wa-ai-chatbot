@@ -44,6 +44,9 @@
                 Actions
             </flux:table.column>
             <x-loop-th :$searchBy :$paginationOrder :$paginationOrderBy />
+            <flux:table.column>
+                Image
+            </flux:table.column>
         </flux:table.columns>
         <flux:table.rows>
             @forelse($data as $d)
@@ -93,6 +96,15 @@
                     </flux:table.cell>
                     <flux:table.cell>
                         {{ $d->created_at->format('Y-m-d H:i:s') }}
+                    </flux:table.cell>
+                    <flux:table.cell>
+                        @if($d->getFirstMedia('image'))
+                            <img src="{{ $d->getFirstMediaUrl('image') }}" alt="{{ $d->name }}" class="w-16 h-16 object-cover rounded">
+                        @else
+                            <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                <span class="text-gray-500 text-sm">No Image</span>
+                            </div>
+                        @endif
                     </flux:table.cell>
                 </flux:table.row>
             @empty
