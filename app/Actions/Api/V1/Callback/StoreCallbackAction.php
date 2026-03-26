@@ -106,27 +106,31 @@ class StoreCallbackAction
         }
 
         // Auto Save contact info
-        $contact = DeviceContact::updateOrCreate(
-            [
-                'device_id' => $device->id,
-                'phone' => jidToPhone($senderJid),
-            ],
-            [
-                'push_name' => $info['PushName'] ?? null,
-                'phone_jid' => $senderJid,
-            ],
-        );
+        try {
+            $contact = DeviceContact::updateOrCreate(
+                [
+                    'device_id' => $device->id,
+                    'phone' => jidToPhone($senderJid),
+                ],
+                [
+                    'push_name' => $info['PushName'] ?? null,
+                    'phone_jid' => $senderJid,
+                ],
+            );
 
-        // Store message in database
-        DeviceMessage::create([
-            'device_id' => $device->id,
-            'device_contact_id' => $contact->id,
-            'chat_jid' => $chatLid,
-            'sender_jid' => $senderJid,
-            'message' => $messageContent,
-            'metadata' => $metadata,
-            'type' => $messageType,
-        ]);
+            // Store message in database
+            DeviceMessage::create([
+                'device_id' => $device->id,
+                'device_contact_id' => $contact->id,
+                'chat_jid' => $chatLid,
+                'sender_jid' => $senderJid,
+                'message' => $messageContent,
+                'metadata' => $metadata,
+                'type' => $messageType,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to save contact or message: '.$e->getMessage());
+        }
 
         // Auto mark as read
         $isFromMe = $info['IsFromMe'] ?? false;
